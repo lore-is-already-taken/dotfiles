@@ -1,0 +1,13 @@
+require("after.nvim-tree")
+require("after.treesitter")
+require("after.telescope")
+require("after.easymotion")
+require("after.indent-blankline")
+require("after.lualine")
+require("after.neodev")
+require("after.conform")
+require("after.debugging")
+require("after.mason")
+require("after.arduino")
+
+vim.cmd("colorscheme catppuccin-mocha")
