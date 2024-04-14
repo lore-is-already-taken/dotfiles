@@ -3,6 +3,7 @@ require("after.languages.conform")
 require("after.languages.indent-blankline")
 
 require("after.languages.python")
+require("after.languages.python-debug")
 require("after.languages.lua")
 require("after.languages.css")
 require("after.languages.javascript")
