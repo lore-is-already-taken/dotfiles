@@ -1,9 +1,7 @@
 -- lua/after/languages/lsp_helpers.lua
-require("neodev").setup()
 local M = {}
 
 M.on_attach = function(_, bufnr)
-
 	vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 	local opts = { buffer = bufnr }
 	vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
@@ -15,4 +13,5 @@ M.on_attach = function(_, bufnr)
 	vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
 end
 
+--require("neodev").setup({})
 return M
