@@ -13,6 +13,7 @@ vim.keymap.set("n", "N", "Nzzzv")
 
 --open Mason
 vim.keymap.set("n", "<leader>ms", ":Mason<cr>", { desc = "Open Mason menu" })
+
 --open Lazy
 vim.keymap.set("n", "<leader>lz", ":Lazy<cr>", { desc = "Open Lazy menu" })
 
