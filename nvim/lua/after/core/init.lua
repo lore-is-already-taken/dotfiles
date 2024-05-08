@@ -1,5 +1,5 @@
-require("after.core.nvim-tree")
 require("after.core.treesitter")
+require("after.core.nvim-tree")
 require("after.core.telescope")
 require("after.core.easymotion")
 require("after.core.mason")

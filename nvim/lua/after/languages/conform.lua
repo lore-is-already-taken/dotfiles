@@ -10,6 +10,7 @@ conform.setup({
 		typescript = { { "biome" } },
 		html = { { "prettierd", "prettier" } },
 		css = { { "prettier" } },
+		yaml = { { "prettier" } },
 	},
 	--[[ format_on_save = {]]
 	--[[lsp_fallback = false,]]
