@@ -95,12 +95,12 @@ keys = [
     Key(
         [],
         "XF86MonBrightnessUp",
-        lazy.spawn("brightnessctl -d intel_backlight set 2%+"),
+        lazy.spawn("brightnessctl -d intel_backlight set 1%+"),
     ),
     Key(
         [],
         "XF86MonBrightnessDown",
-        lazy.spawn("brightnessctl -d intel_backlight set 2%-"),
+        lazy.spawn("brightnessctl -d intel_backlight set 1%-"),
     ),
     # Key([], "XF86MonBrightnessUp", lazy.spawn("maclight screen up")),
     # Key([], "XF86MonBrightnessDown", lazy.spawn("maclight screen down")),
