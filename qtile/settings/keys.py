@@ -2,7 +2,7 @@
 
 import platform
 
-from libqtile.command import lazy
+from libqtile.lazy import lazy
 from libqtile.config import Key
 
 mod = "mod4"
