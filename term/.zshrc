@@ -52,6 +52,7 @@ source /home/ivn/powerlevel10k/powerlevel10k.zsh-theme
 # Manual configuration
 
 PATH=/root/.local/bin:/snap/bin:/usr/sandbox/:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/share/games:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+export PATH="$PATH:/home/ivn/.local/bin"
 
 # Manual aliases
 alias ll='lsd -lh --group-dirs=first'
@@ -65,9 +66,9 @@ alias catn='/bin/cat'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Plugins
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/share/zsh-sudo/sudo.plugin.zsh
+source ~/repos/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/repos/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ~/repos/zsh-sudo/sudo.plugin.zsh
 
 # Functions
 function mkt(){
@@ -129,3 +130,13 @@ function rmk(){
 
 # Finalize Powerlevel10k instant prompt. Should stay at the bottom of ~/.zshrc.
 (( ! ${+functions[p10k-instant-prompt-finalize]} )) || p10k-instant-prompt-finalize
+
+# Created by `pipx` on 2024-06-07 12:44:35
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+
+# Load Angular CLI autocompletion.
+source <(ng completion script)
