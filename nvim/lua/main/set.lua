@@ -51,5 +51,7 @@ vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
 vim.o.clipboard = "unnamedplus"
-
+vim.o.list = false
 --vim.opt.colorcolumn = "90"
+-- Set cursor shapes for different modes
+vim.opt.guicursor = "n-v-c:block,i-ci-ve:ver30"
