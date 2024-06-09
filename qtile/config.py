@@ -5,7 +5,6 @@ import subprocess
 from os import path
 
 from libqtile import hook
-
 from settings.groups import groups
 from settings.keys import keys, mod
 from settings.layouts import floating_layout, layouts

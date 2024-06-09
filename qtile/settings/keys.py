@@ -2,8 +2,8 @@
 
 import platform
 
-from libqtile.lazy import lazy
 from libqtile.config import Key
+from libqtile.lazy import lazy
 
 mod = "mod4"
 hostname = platform.node()
