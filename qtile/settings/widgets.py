@@ -20,7 +20,7 @@ def icon(fg="text", bg="dark", fontsize=16, text="?"):
 def powerline(foreground: str = "light", background: str = "dark"):
     return widget.TextBox(
         **base(foreground, background),
-        text=" ",
+        text="",
         fontsize=37,
         padding=1,  # Icon: nf-oct-triangle_left
     )
@@ -71,28 +71,10 @@ primary_widgets = [
         update_interval=1,
     ),
     #
-    ## for check updates
     powerline("color4", "color2"),
-    ###
-    icon(bg="color4", text=" "),  # Icon: nf-fa-download
-    widget.CheckUpdates(
-        background=colors["color4"],
-        colour_have_updates=colors["text"],
-        colour_no_updates=colors["text"],
-        no_update_string="0",
-        display_format="{updates}",
-        update_interval=3,
-        custom_command="checkupdates",
-    ),
-    ##
-    powerline("color3", "color4"),
-    ##
-    ## for check updates
-    #
-    # wifi info
-    icon(bg="color3", text=" "),  # Icon: nf-fa-feed
+    icon(bg="color4", text=" "),  # Icon: nf-fa-feed
     widget.Net(
-        **base(bg="color3"),
+        **base(bg="color4"),
         interface="wlp1s0",
         format="{down:.1f}{down_suffix} ↓↑ {up:.1f}{up_suffix}",
         prefix="M",
@@ -101,7 +83,7 @@ primary_widgets = [
     # wifi info
     #
     # show currend layout
-    powerline("color1", "color3"),
+    powerline("color1", "color4"),
     ##
     # widget.CurrentLayoutIcon(**base(bg="color2"), scale=0.65),
     # widget.CurrentLayout(**base(bg="color2"), padding=5),

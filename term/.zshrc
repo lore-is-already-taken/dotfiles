@@ -140,3 +140,4 @@ export NVM_DIR="$HOME/.nvm"
 
 # Load Angular CLI autocompletion.
 source <(ng completion script)
+source ~/powerlevel10k/powerlevel10k.zsh-theme
