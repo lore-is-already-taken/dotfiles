@@ -11,6 +11,7 @@ conform.setup({
 		html = { { "prettierd", "prettier" } },
 		css = { { "prettier" } },
 		yaml = { { "prettier" } },
+		tex = { { "latexindent" } },
 	},
 	--[[ format_on_save = {]]
 	--[[lsp_fallback = false,]]
