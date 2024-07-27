@@ -1,5 +1,5 @@
 # Qtile Config File
-# http://www.qtile.org/
+#http://www.qtile.org/
 
 import subprocess
 from os import path

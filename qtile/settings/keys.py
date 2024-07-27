@@ -1,9 +1,14 @@
 # Qtile keybindings
 
+import datetime
 import platform
 
 from libqtile.config import Key
 from libqtile.lazy import lazy
+
+timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+filename = f"/tmp/screenshot_{timestamp}.png"
+
 
 mod = "mod4"
 hostname = platform.node()
@@ -94,7 +99,7 @@ keys = [
     ),
     Key(
         [mod, "shift"],
-        "E",
+        "p",
         lazy.spawn("thunderbird --force-device-scale-factor=1.5 &"),
         desc="open thunderbird",
     ),
@@ -127,8 +132,7 @@ keys = [
         [mod, "shift"],
         "s",
         lazy.spawn(
-            "scrot -f -q 100 -s -e 'xclip -selection clipboard -t image/png -i $f && mv $f /tmp/screenshot.png'"
-            # "scrot -f -q 100 -s -e 'xclip -selection clipboard -t image/png -i $f'"
+            "scrot -f -q 100 -s '/tmp/%Y-%m-%d_%H%M%S_screenshot.png' -e 'xclip -selection clipboard -t image/png -i $f'"
         ),
         desc="take a screen shot and copy to the clipboard",
     ),

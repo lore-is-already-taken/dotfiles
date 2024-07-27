@@ -7,7 +7,7 @@ from .path import qtile_path
 
 
 def load_theme():
-    theme = "nord"
+    theme = "dracula"
 
     # config = path.join(qtile_path, "config.json")
     # if path.isfile(config):
