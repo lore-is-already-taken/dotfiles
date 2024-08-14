@@ -6,12 +6,12 @@ conform.setup({
 		-- Conform will run multiple formatters sequentially
 		python = { "isort", "black" },
 		-- Use a sub-list to run only the first available formatter
-		javascript = { { "prettierd", "prettier" } },
-		typescript = { { "biome" } },
-		html = { { "prettierd", "prettier" } },
-		css = { { "prettier" } },
-		yaml = { { "prettier" } },
-		tex = { { "latexindent" } },
+		javascript = { "prettierd", "prettier" },
+		typescript = { "biome" },
+		html = { "prettierd", "prettier" },
+		css = { "prettier" },
+		yaml = { "prettier" },
+		tex = { "latexindent", "bibtex-tidy" },
 	},
 	--[[ format_on_save = {]]
 	--[[lsp_fallback = false,]]
