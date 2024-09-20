@@ -1,4 +1,3 @@
---require("lualine").setup({
 local config = {
 	options = {
 		icons_enabled = true,

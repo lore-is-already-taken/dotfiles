@@ -6,10 +6,8 @@ local on_attach = lsp_helpers.on_attach
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-require("lspconfig").pyright.setup({
+
+require("lspconfig").nil_ls.setup({
 	capabilities = capabilities,
 	on_attach = on_attach,
-	settings = {
-		filetypes = { "python" },
-	},
 })

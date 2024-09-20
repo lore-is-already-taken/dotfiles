@@ -81,13 +81,13 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     # Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     # custom
-    Key([mod, "shift"], "B", lazy.spawn("brave-browser"), desc="open Brave Browser"),
+    Key([mod, "shift"], "B", lazy.spawn("brave"), desc="open Brave Browser"),
     Key([mod, "shift"], "D", lazy.spawn("discord"), desc="Open Discord "),
     Key(
         [mod],
         "d",
         lazy.spawn(
-            "rofi -show drun -theme ~/.config/rofi/launchers/type-5/style-2.rasi"
+            "rofi -show run"
         ),
         desc="open Rofi",
     ),

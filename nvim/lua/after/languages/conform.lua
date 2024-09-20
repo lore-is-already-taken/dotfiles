@@ -11,6 +11,7 @@ conform.setup({
 		html = { "prettierd", "prettier" },
 		css = { "prettier" },
 		yaml = { "prettier" },
+		nix = { "nixpkgs-fmt" },
 		tex = { "latexindent", "bibtex-tidy" },
 	},
 	--[[ format_on_save = {]]
