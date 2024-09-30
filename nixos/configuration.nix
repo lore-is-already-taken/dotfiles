@@ -70,6 +70,9 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
+  # enable NTFS
+  boot.supportedFilesystems = [ "ntfs" ];
+
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
@@ -98,14 +101,27 @@
     description = "ivn";
     extraGroups = [ "networkmanager" "wheel" "dialout" ];
     packages = with pkgs; [
+        #arduino
+        screen
+        esptool
+        arduino-language-server
+        arduino-cli
+        rocmPackages_5.llvm.clang
+        rocmPackages_5.llvm.clang-tools-extra
+        esptool
+        #arduino
         neovim
+        spotify
+        obsidian
         wget
         thunderbird
         brave
         kitty
         git
+        tree
         discord
         openfortivpn
+        protonvpn-gui
         lsd
         bat
         picom
@@ -119,23 +135,34 @@
         htop
         ripgrep
         xclip
+        ripgrep
         scrot
         zip
         unzip
         cargo
         luarocks
         zulu8
-        lua-language-server
         alsa-utils
-        arduino-ide
-        arduino-cli
-        arduino-language-server
+        brightnessctl
         python312Packages.pip
         vscode
+        usbutils
         rocmPackages_5.llvm.clang-tools-extra
         nmap
+        traceroute
         docker-compose
         docker_27
+        steam
+        #hacking
+        burp
+        hydra-cli
+        thc-hydra
+        burpsuite
+        metasploit
+        exploitdb
+        wfuzz
+        gobuster
+        sqlmap
     ];
   };
 
