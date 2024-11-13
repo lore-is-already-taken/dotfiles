@@ -2,13 +2,49 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config,  pkgs, ... }:
+{ config,lib, pkgs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
+
+## nvidia config
+# Enable OpenGL
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+  driSupport32Bit = true; 
+  };
+
+  # Load nvidia driver for Xorg and Wayland
+  services.xserver.videoDrivers = ["nvidia"];
+
+boot.blacklistedKernelModules = [ "nouveau" ];
+hardware.nvidia = {
+  modesetting.enable = true;
+  powerManagement = {
+    enable = false;
+    finegrained = false;
+  };
+  open = false;
+  nvidiaSettings = true;
+  
+  # Explicitly specify the package
+  package = config.boot.kernelPackages.nvidiaPackages.stable;
+  
+  # Prime configuration for laptops
+  prime = {
+    offload.enable = true;  # Enable on-demand mode
+    # Enable if you want to use the integrated GPU for the display
+    # and only use nvidia for specific applications
+    intelBusId = "PCI:0:2:0";  # You'll need to verify this value
+    nvidiaBusId = "PCI:1:0:0";  # You'll need to verify this value
+  };
+};
+ 
+## end nvidia config
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
