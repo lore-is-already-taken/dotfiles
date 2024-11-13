@@ -75,7 +75,7 @@ primary_widgets = [
     icon(bg="color4", text=" "),  # Icon: nf-fa-feed
     widget.Net(
         **base(bg="color4"),
-        interface="wlp1s0",
+        interface="wlo1",
         format="{down:.1f}{down_suffix} ↓↑ {up:.1f}{up_suffix}",
         prefix="M",
         update_interval=1,
