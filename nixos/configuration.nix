@@ -75,6 +75,7 @@
 
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
+  programs.steam.enable = true;
 
   # Enable sound with pipewire.
   hardware.pulseaudio.enable = false;
