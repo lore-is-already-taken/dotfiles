@@ -101,68 +101,8 @@
     description = "ivn";
     extraGroups = [ "networkmanager" "wheel" "dialout" ];
     packages = with pkgs; [
-        #arduino
-        screen
-        esptool
-        arduino-language-server
-        arduino-cli
-        rocmPackages_5.llvm.clang
-        rocmPackages_5.llvm.clang-tools-extra
-        esptool
-        #arduino
-        neovim
-        spotify
         obsidian
-        wget
-        thunderbird
-        brave
-        kitty
-        git
-        tree
-        discord
-        openfortivpn
-        protonvpn-gui
-        lsd
-        bat
-        picom
-        gcc
-        nil
-        rofi
-        nixpkgs-fmt
-        stylua
-        nodejs_22
-        go
-        htop
-        ripgrep
-        xclip
-        ripgrep
-        scrot
-        zip
-        unzip
-        cargo
-        luarocks
-        zulu8
-        alsa-utils
-        brightnessctl
-        python312Packages.pip
-        vscode
-        usbutils
-        rocmPackages_5.llvm.clang-tools-extra
-        nmap
-        traceroute
-        docker-compose
-        docker_27
-        steam
-        #hacking
-        burp
-        hydra-cli
-        thc-hydra
-        burpsuite
-        metasploit
-        exploitdb
-        wfuzz
-        gobuster
-        sqlmap
+        
     ];
   };
 
@@ -176,7 +116,66 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    qtile
+qtile
+screen
+arduino-language-server
+arduino-cli
+rocmPackages_5.llvm.clang
+rocmPackages_5.llvm.clang-tools-extra
+esptool
+#arduino
+neovim
+spotify
+wget
+thunderbird
+brave
+kitty
+git
+tree
+discord
+openfortivpn
+protonvpn-gui
+lsd
+bat
+picom
+gcc
+nil
+rofi
+nixpkgs-fmt
+stylua
+nodejs_22
+go
+htop
+ripgrep
+xclip
+ripgrep
+scrot
+zip
+unzip
+cargo
+luarocks
+zulu8
+alsa-utils
+brightnessctl
+python312Packages.pip
+vscode
+usbutils
+rocmPackages_5.llvm.clang-tools-extra
+nmap
+traceroute
+docker-compose
+docker_27
+steam
+#hacking
+burp
+hydra-cli
+thc-hydra
+burpsuite
+metasploit
+exploitdb
+wfuzz
+gobuster
+sqlmap
   ];
 
 fonts.packages = with pkgs; [
