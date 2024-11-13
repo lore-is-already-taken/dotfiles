@@ -51,10 +51,10 @@ source /home/ivn/powerlevel10k/powerlevel10k.zsh-theme
 
 # Manual configuration
 
-PATH=/root/.local/bin:/snap/bin:/usr/sandbox/:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/share/games:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
-export PATH="$PATH:/home/ivn/.local/bin"
-export PATH=$PATH:/usr/local/go/bin
-export PATH=/home/ivn/.nimble/bin:$PATH
+#PATH=/root/.local/bin:/snap/bin:/usr/sandbox/:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/share/games:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+#export PATH="$PATH:/home/ivn/.local/bin"
+#export PATH=$PATH:/usr/local/go/bin
+#export PATH=/home/ivn/.nimble/bin:$PATH
 # to use johntheripper
 
 # Manual aliases
@@ -143,5 +143,6 @@ export NVM_DIR="$HOME/.nvm"
 
 
 # Load Angular CLI autocompletion.
-source <(ng completion script)
+#source <(ng completion script)
+source ~/powerlevel10k/powerlevel10k.zsh-theme
 source ~/powerlevel10k/powerlevel10k.zsh-theme
