@@ -12,7 +12,7 @@ from .widgets import primary_widgets, secondary_widgets
 
 
 def status_bar(widgets):
-    return bar.Bar(widgets, 24, opacity=1)
+    return bar.Bar(widgets, 50, opacity=1)
 
 
 def get_random_image(path: str = "/home/ivn/Pictures/wallpaper/") -> str:
