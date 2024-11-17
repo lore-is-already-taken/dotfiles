@@ -98,12 +98,12 @@
   services.xserver.windowManager.qtile.enable = true;
   # Configure keymap in X11
   services.xserver = {
-    xkb.layout = "latam";
-    xkb.variant = "";
+    xkb.layout = "us";
+    xkb.variant = "intl";
   };
 
   # Configure console keymap
-  console.keyMap = "la-latin1";
+  console.keyMap = "us";
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
