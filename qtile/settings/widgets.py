@@ -32,7 +32,7 @@ def workspaces():
         widget.GroupBox(
             **base(fg="light"),
             font="UbuntuMono Nerd Font",
-            fontsize=30,
+            fontsize=25,
             margin_y=3,
             margin_x=2,
             # padding_y=9,
@@ -51,17 +51,20 @@ def workspaces():
             disable_drag=True,
         ),
         separator(),
-        widget.WindowName(**base(fg="focus"), fontsize=14, padding=0),
+        widget.WindowName(**base(fg="focus"), fontsize=25, padding=0),
         separator(),
     ]
 
 
 primary_widgets = [
+    ## Left
     *workspaces(),
     separator(),
-    ##
+
+    ## center
     powerline("color2", "dark"),
-    ##
+
+    ## Right
     icon(bg="color2", text="󰧑 ",fontsize=25),
     widget.CPU(
         **base(bg="color2"),
