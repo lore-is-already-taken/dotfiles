@@ -168,6 +168,7 @@ rocmPackages_5.llvm.clang-tools-extra
 esptool
 #arduino
 neovim
+pavucontrol
 # nvidia
 spotify
 aircrack-ng
@@ -179,6 +180,7 @@ git
 tree
 discord
 openfortivpn
+openvpn
 protonvpn-gui
 lsd
 bat
