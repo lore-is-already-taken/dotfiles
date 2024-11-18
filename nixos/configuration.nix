@@ -179,6 +179,7 @@ kitty
 git
 tree
 discord
+tor
 openfortivpn
 openvpn
 protonvpn-gui
