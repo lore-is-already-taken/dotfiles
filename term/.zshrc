@@ -63,9 +63,9 @@ alias la='lsd -a --group-dirs=first'
 alias l='lsd --group-dirs=first'
 alias lla='lsd -lha --group-dirs=first'
 alias ls='lsd --group-dirs=first'
-alias cat='/usr/bin/bat'
-alias catn='/bin/cat'
-alias john='/usr/local/bin/run/john'
+alias cat='bat'
+#alias catn='/bin/cat'
+#alias john='/usr/local/bin/run/john'
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -144,5 +144,6 @@ export NVM_DIR="$HOME/.nvm"
 
 # Load Angular CLI autocompletion.
 #source <(ng completion script)
+source ~/powerlevel10k/powerlevel10k.zsh-theme
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 source ~/powerlevel10k/powerlevel10k.zsh-theme
