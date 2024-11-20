@@ -161,17 +161,11 @@
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
 qtile
 screen
-arduino-language-server
-arduino-cli
-rocmPackages_5.llvm.clang
-rocmPackages_5.llvm.clang-tools-extra
-esptool
 #arduino
 neovim
 pavucontrol
 # nvidia
 spotify
-aircrack-ng
 wget
 thunderbird
 brave
@@ -186,13 +180,8 @@ protonvpn-gui
 lsd
 bat
 picom
-gcc
-nil
 rofi
-nixpkgs-fmt
-stylua
 nodejs_22
-go
 htop
 ripgrep
 xclip
@@ -202,28 +191,16 @@ zip
 unzip
 cargo
 luarocks
-zulu8
 alsa-utils
 brightnessctl
-python312Packages.pip
-vscode
 usbutils
-rocmPackages_5.llvm.clang-tools-extra
-nmap
 traceroute
 docker-compose
 docker_27
 steam
 #hacking
 burp
-hydra-cli
-thc-hydra
 burpsuite
-metasploit
-exploitdb
-wfuzz
-gobuster
-sqlmap
   ];
 
 fonts.packages = with pkgs; [
