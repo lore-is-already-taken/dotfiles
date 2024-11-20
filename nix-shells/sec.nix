@@ -6,6 +6,12 @@ in
 pkgs.mkShellNoCC {
   packages = with pkgs; [
 john
-
+wfuzz
+metasploit
+gobuster
+nmap
+aircrack-ng
+sqlmap
+exploitdb
   ];
 }
