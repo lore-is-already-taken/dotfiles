@@ -131,6 +131,9 @@ function rmk(){
 	scrub -p dod $1
 	shred -zun 10 -v $1
 }
+function hacking(){
+    nix-shell ~/repos/dotfiles/nix-shells/sec.nix
+}
 
 # Finalize Powerlevel10k instant prompt. Should stay at the bottom of ~/.zshrc.
 (( ! ${+functions[p10k-instant-prompt-finalize]} )) || p10k-instant-prompt-finalize
