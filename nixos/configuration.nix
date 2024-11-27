@@ -57,6 +57,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "nixos"; # Define your hostname.
+  networking.extraHosts = "10.10.11.32 sightless.htb sqlpad.sightless.htb";
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -145,7 +146,6 @@
     extraGroups = [ "networkmanager" "wheel" "dialout" ];
     packages = with pkgs; [
         obsidian
-        
     ];
   };
 
@@ -163,6 +163,7 @@ qtile
 screen
 #arduino
 neovim
+google-chrome
 pavucontrol
 # nvidia
 spotify
@@ -185,7 +186,6 @@ nodejs_22
 htop
 ripgrep
 xclip
-ripgrep
 scrot
 zip
 unzip
@@ -221,10 +221,10 @@ fonts.packages = with pkgs; [
   # services.openssh.enable = true;
 
   # Open ports in the firewall.
-   #networking.firewall.allowedTCPPorts = [ 12345 ];
-   #networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [ 12345 ];
+  #networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
-   networking.firewall.enable = false;
+  networking.firewall.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
