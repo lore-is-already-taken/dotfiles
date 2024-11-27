@@ -1,5 +1,5 @@
 let
-  nixpkgs = fetchTarball "https://github.com/NixOS/nixpkgs/tarball/nixos-24.05";
+  nixpkgs = fetchTarball "https://github.com/NixOS/nixpkgs/tarball/nixos-unstable";
   pkgs = import nixpkgs { config = {}; overlays = []; };
 in
 
@@ -13,5 +13,9 @@ nmap
 aircrack-ng
 sqlmap
 exploitdb
+hashcat
+hcxtools
+ffuf
+netcat-gnu
   ];
 }

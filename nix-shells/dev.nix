@@ -12,6 +12,7 @@ pkgs.mkShell {
   
   packages = with pkgs; [
     neovim
+    gnumake
   ];
 }
 
