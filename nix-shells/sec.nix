@@ -17,5 +17,6 @@ hashcat
 hcxtools
 ffuf
 netcat-gnu
+thc-hydra
   ];
 }
