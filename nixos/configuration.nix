@@ -16,7 +16,7 @@
   boot.kernelModules = [ "nvidia_uvm" "nvidia_modeset" "nvidia_drm" "nvidia" ];
   boot.kernelParams = [ "nvidia-drm.modeset=1" ];
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
 ##driSupport = true;
 ## driSupport32Bit = true; 
@@ -95,6 +95,18 @@
   # Enable Docker
   virtualisation.docker.enable = true;
 
+  virtualisation.libvirtd.enable = true;
+  programs.virt-manager.enable = true;
+    virtualisation.libvirtd.qemu = {
+  package = pkgs.qemu_kvm;
+  ovmf = {
+    enable = true;
+    packages = [ pkgs.OVMFFull.fd ];
+  };
+  };
+
+  
+  programs.openvpn3.enable = true;
   # Enable the Pantheon Desktop Environment.
   services.xserver.displayManager.lightdm.enable = true;
   services.xserver.desktopManager.pantheon.enable = true;
@@ -143,7 +155,7 @@
   users.users.ivn = {
     isNormalUser = true;
     description = "ivn";
-    extraGroups = [ "networkmanager" "wheel" "dialout" ];
+    extraGroups = [ "networkmanager" "wheel" "dialout" "libvirtd" ];
     packages = with pkgs; [
         obsidian
     ];
@@ -159,10 +171,12 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-qtile
+python312Packages.qtile
 screen
 #arduino
 neovim
+virt-manager
+libvirt
 google-chrome
 pavucontrol
 # nvidia
@@ -232,6 +246,6 @@ fonts.packages = with pkgs; [
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.05"; # Did you read the comment?
+  system.stateVersion = "24.11"; # Did you read the comment?
 
 }
