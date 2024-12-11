@@ -1,5 +1,6 @@
 let
-  nixpkgs = fetchTarball "https://github.com/NixOS/nixpkgs/tarball/nixos-unstable";
+  #nixpkgs = fetchTarball "https://github.com/NixOS/nixpkgs/tarball/nixos-unstable";
+  nixpkgs = fetchTarball "https://github.com/NixOS/nixpkgs/tarball/nixos-24.11";
   pkgs = import nixpkgs { config = {}; };
 in
 pkgs.mkShell {
@@ -11,8 +12,9 @@ pkgs.mkShell {
   '';
   
   packages = with pkgs; [
-    neovim
     gnumake
+    lua-language-server
+    nixpkgs-fmt
   ];
 }
 
