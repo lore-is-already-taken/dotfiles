@@ -171,6 +171,7 @@
         python312Packages.qtile
         screen
         neovim
+        mdcat
         blender
         nil
         virt-manager
