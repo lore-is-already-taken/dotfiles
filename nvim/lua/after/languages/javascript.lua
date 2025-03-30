@@ -12,7 +12,7 @@ require("lspconfig").ts_ls.setup({
 			{
 				name = "@vue/typescript-plugin",
 				location = "/usr/local/lib/node_modules/@vue/typescript-plugin",
-				languages = { "javascript", "typescript", "vue" },
+				languages = { "javascript", "typescript", "vue", "typescriptreact" },
 			},
 		},
 	},
@@ -23,8 +23,17 @@ require("lspconfig").ts_ls.setup({
 		"typescriptreact",
 	},
 })
-
-require("lspconfig").volar.setup({ on_attach = on_attach })
+require("lspconfig").emmet_language_server.setup({
+	on_attach = on_attach,
+	capabilities = capabilities,
+	filetypes = {
+		"javascript",
+		"vue",
+		"typescript",
+		"typescriptreact",
+	},
+})
+--require("lspconfig").volar.setup({ on_attach = on_attach })
 -- You must make sure volar is setup
 -- e.g. require'lspconfig'.volar.setup{}
 -- See volar's section for more information

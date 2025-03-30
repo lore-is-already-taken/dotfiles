@@ -5,10 +5,9 @@
             #url = "github:nixos/nixpkgs/nixos-unstable";
             url = "github:nixos/nixpkgs/nixos-24.11";
         };
-        #nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
     };
 
-    outputs = { self, nixpkgs, ... }:
+    outputs = { nixpkgs, ... }:
     let
         lib = nixpkgs.lib;
     in {
