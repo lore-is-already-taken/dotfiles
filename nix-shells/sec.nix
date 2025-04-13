@@ -18,5 +18,6 @@ hcxtools
 ffuf
 netcat-gnu
 thc-hydra
+exiftool
   ];
 }

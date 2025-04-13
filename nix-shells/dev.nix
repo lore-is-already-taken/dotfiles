@@ -14,7 +14,9 @@ pkgs.mkShell {
   packages = with pkgs; [
     gnumake
     lua-language-server
+    stylua
     nixpkgs-fmt
+    lemminx
   ];
 }
 

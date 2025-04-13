@@ -9,29 +9,40 @@ local MY_FQBN = "esp32:esp32:esp32"
 
 require("lspconfig").arduino_language_server.setup({
 	on_attach = on_attach,
-    cmd = {
-        "arduino-language-server",
-        "-clangd",
-        "clangd",
-        "-cli",
-        "arduino-cli",
-        "-cli-config",
-        "$HOME/.arduino15/arduino-cli.yaml",
-        "-fqbn",
-        MY_FQBN,
-    },
-})
---require("lspconfig").clangd.setup({
+	capabilities = {
+		textDocument = {
+			semanticTokens = vim.NIL,
+		},
+		workspace = {
+			semanticTokens = vim.NIL,
+		},
+	},
 
---    on_attach = on_attach,
---    capabilities = capabilities,
---    cmd = { "clangd", "--compile-commands-dir=" .. vim.loop.cwd() },
---    filetypes = { "c", "cpp", "objc", "objcpp", "arduino" },
---    init_options = {
---        usePlaceholders = true,
---        completeUnimported = true,
---    },
---})
+	--cmd ={"arduino-language-server"},
+	filetypes = { "arduino" },
+	cmd = {
+		"arduino-language-server",
+		"-clangd",
+		"clangd",
+		"-cli",
+		"arduino-cli",
+		"-cli-config",
+		"$HOME/.arduino15/arduino-cli.yaml",
+		"-fqbn",
+		MY_FQBN,
+	},
+})
+require("lspconfig").clangd.setup({
+
+	on_attach = on_attach,
+	capabilities = capabilities,
+	cmd = { "clangd", "--compile-commands-dir=" .. vim.loop.cwd() },
+	filetypes = { "c", "cpp", "objc", "objcpp", "arduino" },
+	init_options = {
+		usePlaceholders = true,
+		completeUnimported = true,
+	},
+})
 
 --arduino-cli board attach -p /dev/ttyACM0 -b arduino:avr:uno test.ino
 vim.api.nvim_buf_set_keymap(0, "n", "<leader>aa", ":ArduinoAttach<CR>", {})

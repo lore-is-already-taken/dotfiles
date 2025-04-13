@@ -30,11 +30,9 @@
 
 
         powerManagement = {
-            enable = true;
+            enable = false;
             finegrained = false;
-        };
-
-          
+        }; 
         package = config.boot.kernelPackages.nvidiaPackages.stable;
         # Explicitly specify the package
           
@@ -171,6 +169,8 @@
         python312Packages.qtile
         screen
         neovim
+        arduino
+        arduino-core
         arduino-cli
         arduino-language-server
         clang-tools

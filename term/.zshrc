@@ -137,6 +137,10 @@ function hack(){
 function dev(){
     nix-shell ~/repos/dotfiles/nix-shells/dev.nix
 }
+function ia(){
+    nix-shell ~/repos/dotfiles/nix-shells/lmstudio.nix
+}
+
 # Finalize Powerlevel10k instant prompt. Should stay at the bottom of ~/.zshrc.
 (( ! ${+functions[p10k-instant-prompt-finalize]} )) || p10k-instant-prompt-finalize
 
