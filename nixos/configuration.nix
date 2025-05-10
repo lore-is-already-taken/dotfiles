@@ -166,7 +166,10 @@
     # List packages installed in system profile. To search, run:
     # $ nix search wget
     environment.systemPackages = with pkgs; [
+        reaper
         python312Packages.qtile
+        util-linux
+        cryptsetup
         screen
         neovim
         arduino
@@ -190,7 +193,6 @@
         git
         tree
         discord
-        openfortivpn
         openvpn
         protonvpn-gui
         lsd
