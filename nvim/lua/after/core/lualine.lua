@@ -37,43 +37,41 @@ local config = {
 	winbar = {},
 	inactive_winbar = {},
 	extensions = {
-"quickfix",
-{
-          filetypes = { "codecompanion" },
-          sections = {
-            lualine_a = {
-              mode,
-            },
-            lualine_b = {
-              codecompanion_adapter_name,
-            },
-            lualine_c = {
-              codecompanion_current_model_name,
-            },
-            lualine_x = {},
-            lualine_y = {
-              "progress",
-            },
-            lualine_z = {
-              "location",
-            },
-          },
-          inactive_sections = {
-            lualine_a = {},
-            lualine_b = {
-              codecompanion_adapter_name,
-            },
-            lualine_c = {},
-            lualine_x = {},
-            lualine_y = {
-              "progress",
-            },
-            lualine_z = {},
-          },
-        }
-  },
-
-        
+		"quickfix",
+		{
+			filetypes = { "codecompanion" },
+			sections = {
+				lualine_a = {
+					mode,
+				},
+				lualine_b = {
+					codecompanion_adapter_name,
+				},
+				lualine_c = {
+					codecompanion_current_model_name,
+				},
+				lualine_x = {},
+				lualine_y = {
+					"progress",
+				},
+				lualine_z = {
+					"location",
+				},
+			},
+			inactive_sections = {
+				lualine_a = {},
+				lualine_b = {
+					codecompanion_adapter_name,
+				},
+				lualine_c = {},
+				lualine_x = {},
+				lualine_y = {
+					"progress",
+				},
+				lualine_z = {},
+			},
+		},
+	},
 }
 -- Inserts a component in lualine_c at left section
 local function ins_lualine_x(component)

@@ -1,16 +1,37 @@
+-- This file contains the configuration for setting up the lazy.nvim plugin manager in Neovim.
+
+-- Spell-checking
+vim.opt.spell = true -- activa spell checker
+vim.opt.spelllang = { "en" }
+
+-- Define the path to the lazy.nvim plugin
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
+-- Check if the lazy.nvim plugin is not already installed
 if not vim.loop.fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable", -- latest stable release
-		lazypath,
-	})
+  -- Bootstrap lazy.nvim by cloning the repository
+  -- stylua: ignore
+  vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath })
 end
-vim.opt.rtp:prepend(lazypath)
+
+-- Prepend the lazy.nvim path to the runtime path
+vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
+
+-- Fix copy and paste in WSL (Windows Subsystem for Linux)
+if vim.fn.has("wsl") == 1 then
+	vim.g.clipboard = {
+		name = "win32yank", -- Use win32yank for clipboard operations
+		copy = {
+			["+"] = "win32yank.exe -i --crlf", -- Command to copy to the system clipboard
+			["*"] = "win32yank.exe -i --crlf", -- Command to copy to the primary clipboard
+		},
+		paste = {
+			["+"] = "win32yank.exe -o --lf", -- Command to paste from the system clipboard
+			["*"] = "win32yank.exe -o --lf", -- Command to paste from the primary clipboard
+		},
+		cache_enabled = false, -- Disable clipboard caching
+	}
+end
 
 require("lazy").setup({
 	{ "LazyVim/LazyVim", import = "lazyvim.plugins" },
@@ -28,7 +49,7 @@ require("lazy").setup({
 	-- Utility plugins
 	{ import = "lazyvim.plugins.extras.util.mini-hipatterns" },
 
-	{ import = "main.plugins" },
+	{ import = "plugins" },
 	performance = {
 		rtp = {
 			-- Disable some runtime path plugins to improve performance
