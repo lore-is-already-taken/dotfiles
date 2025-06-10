@@ -1,2 +1,3 @@
-require("main")
+require("config.lazy")
 require("after")
+require("main.set")

@@ -1,6 +1,6 @@
 --require("after.languages.cmp")
 require("after.languages.conform")
-require("after.languages.indent-blankline")
+--require("after.languages.indent-blankline")
 require("after.languages.python")
 require("after.languages.python-debug")
 require("after.languages.sh")
