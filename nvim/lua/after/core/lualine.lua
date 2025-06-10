@@ -18,7 +18,9 @@ local config = {
 		},
 	},
 	sections = {
-		lualine_a = { "mode" },
+		lualine_a = {
+			"mode", -- Display the current mode
+		}, -- { "mode" },
 		lualine_b = { "branch", "diff", "diagnostics" },
 		lualine_c = { "filename" },
 		lualine_x = { "encoding", "filetype" },

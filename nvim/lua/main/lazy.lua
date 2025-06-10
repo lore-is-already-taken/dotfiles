@@ -13,7 +13,20 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-	{
-		import = "main.plugins",
-	},
+	{ "LazyVim/LazyVim", import = "lazyvim.plugins" },
+
+	-- Editor plugins
+	{ import = "lazyvim.plugins.extras.editor.harpoon2" },
+	{ import = "lazyvim.plugins.extras.editor.mini-files" },
+	{ import = "lazyvim.plugins.extras.editor.snacks_explorer" },
+	{ import = "lazyvim.plugins.extras.editor.snacks_picker" },
+
+	-- Coding plugins
+	{ import = "lazyvim.plugins.extras.coding.mini-surround" },
+	{ import = "lazyvim.plugins.extras.editor.mini-diff" },
+
+	-- Utility plugins
+	{ import = "lazyvim.plugins.extras.util.mini-hipatterns" },
+
+	{ import = "main.plugins" },
 }, {})
