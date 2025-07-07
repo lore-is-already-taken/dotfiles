@@ -11,7 +11,7 @@
 
     ## nvidia config
     # Enable OpenGL
-
+    #
     boot.kernelModules = [ "nvidia_uvm" "nvidia_modeset" "nvidia_drm" "nvidia" ];
     boot.kernelParams = [ "nvidia-drm.modeset=1" ];
 
@@ -45,7 +45,7 @@
             nvidiaBusId = "PCI:2:0:0";  # You'll need to verify this value
         };
     };
- 
+
     ## end nvidia config
 
     # Bootloader.
@@ -83,6 +83,7 @@
 
     # Enable the X11 windowing system.
     services.xserver.enable = true;
+    services.gvfs.enable = true;
 
     # Enable Flakes
     nix.settings.experimental-features = ["nix-command" "flakes"];
@@ -127,7 +128,6 @@
     programs.zsh.enable = true;
     users.defaultUserShell = pkgs.zsh;
     programs.steam.enable = true;
-
     # Enable sound with pipewire.
     hardware.pulseaudio.enable = false;
     security.rtkit.enable = true;
@@ -162,6 +162,7 @@
 
     # Allow unfree packages
     nixpkgs.config.allowUnfree = true;
+    nixpkgs.config.allowBroken = true;
 
     # List packages installed in system profile. To search, run:
     # $ nix search wget
@@ -184,6 +185,7 @@
         virt-manager
         libvirt
         google-chrome
+        go
         pavucontrol
         spotify
         wget
@@ -191,6 +193,8 @@
         brave
         kitty
         git
+        fd
+        jq
         tree
         discord
         openvpn
@@ -247,5 +251,6 @@
     # this value at the release version of the first install of this system.
     # Before changing this value read the documentation for this option
     # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-    system.stateVersion = "24.11"; # Did you read the comment?
+    #system.stateVersion = "24.11"; # Did you read the comment?
+    system.stateVersion = "25.05"; # Did you read the comment?
 }
