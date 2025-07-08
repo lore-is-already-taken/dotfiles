@@ -129,7 +129,7 @@
     users.defaultUserShell = pkgs.zsh;
     programs.steam.enable = true;
     # Enable sound with pipewire.
-    hardware.pulseaudio.enable = false;
+    services.pulseaudio.enable = false;
     security.rtkit.enable = true;
     services.pipewire = {
         enable = true;
@@ -203,7 +203,7 @@
         bat
         picom
         rofi
-        nodejs_22
+        nodejs_24
         htop
         ripgrep
         xclip
@@ -223,8 +223,15 @@
         burpsuite
     ];
 
-    fonts.packages = with pkgs; [
-        ( nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" "Hack" ]; })
+    #fonts.packages = with pkgs; [
+    fonts.packages = [
+        #( nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" "Hack" ]; })
+        pkgs.nerd-fonts._0xproto
+        pkgs.nerd-fonts.droid-sans-mono
+        pkgs.nerd-fonts.iosevka
+        pkgs.nerd-fonts.tinos
+        pkgs.nerd-fonts.open-dyslexic
+
     ];
     # Some programs need SUID wrappers, can be configured further or are
     # started in user sessions.
