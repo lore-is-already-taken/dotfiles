@@ -106,10 +106,9 @@
     programs.openvpn3.enable = true;
     # Enable the Pantheon Desktop Environment.
     services.xserver.displayManager.lightdm.enable = true;
-    services.xserver.desktopManager.pantheon.enable = true;
-
-    # enable qtile
     services.xserver.windowManager.qtile.enable = true;
+    services.xserver.desktopManager.pantheon.enable = true;
+    # enable qtile
     # Configure keymap in X11
     services.xserver = {
         xkb.layout = "us";
@@ -167,7 +166,6 @@
     # List packages installed in system profile. To search, run:
     # $ nix search wget
     environment.systemPackages = with pkgs; [
-        reaper
         python312Packages.qtile
         util-linux
         cryptsetup
@@ -186,7 +184,6 @@
         libvirt
         google-chrome
         go
-        pavucontrol
         spotify
         wget
         thunderbird
@@ -225,7 +222,6 @@
 
     #fonts.packages = with pkgs; [
     fonts.packages = [
-        #( nerdfonts.override { fonts = [ "FiraCode" "DroidSansMono" "Hack" ]; })
         pkgs.nerd-fonts._0xproto
         pkgs.nerd-fonts.droid-sans-mono
         pkgs.nerd-fonts.iosevka
