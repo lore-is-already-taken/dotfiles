@@ -21,7 +21,7 @@ vim.keymap.set("n", "<leader>lz", ":Lazy<cr>", { desc = "Open Lazy menu" })
 
 -- end resize Window
 
-vim.opt.relativenumber = true
+vim.opt.relativenumber = false
 vim.opt.number = true
 vim.opt.cursorline = true
 
@@ -45,7 +45,7 @@ vim.opt.incsearch = true
 
 vim.opt.termguicolors = true
 
-vim.opt.scrolloff = 8
+vim.opt.scrolloff = 5
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
