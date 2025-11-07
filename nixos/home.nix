@@ -1,6 +1,9 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    ./nvidia.nix
+  ];
   # Home Manager needs a bit of information about you and the paths it should manage
   home.username = "ivn";
   home.homeDirectory = "/home/ivn";
@@ -26,6 +29,12 @@
     nil # Nix LSP
     clang-tools
     arduino-language-server
+    
+    # Additional development tools from dev.nix
+    gnumake
+    nixpkgs-fmt
+    lemminx
+    luajitPackages.lua-lsp
     
     # Additional development tools
     go
