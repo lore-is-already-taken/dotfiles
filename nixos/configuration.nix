@@ -23,12 +23,6 @@
   # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = [ "nvidia" ];
 
-  programs.nix-ld.enable = true;
-  programs.nix-ld.libraries = with pkgs; [
-    stdenv.cc.cc # Provides the C compiler libraries
-    glibc # Provides basic C libraries
-    zlib # Often needed by build scripts
-  ];
   hardware.nvidia = {
 
     modesetting.enable = true;
@@ -160,7 +154,6 @@
     extraGroups = [ "networkmanager" "wheel" "dialout" "libvirtd" ];
     packages = with pkgs; [
       obsidian
-      bun
     ];
   };
   # Install firefox.
@@ -177,28 +170,20 @@
     util-linux
     cryptsetup
     screen
-    #neovim
     arduino
     arduino-core
     arduino-cli
     claude-code
-    arduino-language-server
-    clang-tools
-    #rocmPackages_5.llvm.clang-unwrapped
     mdcat
     blender
-    nil
     virt-manager
     libvirt
     google-chrome
-    go
     spotify
     wget
     thunderbird
     brave
     kitty
-    git
-    fd
     jq
     tree
     discord
@@ -208,15 +193,11 @@
     bat
     picom
     rofi
-    nodejs_24
     htop
-    ripgrep
     xclip
     scrot
     zip
     unzip
-    cargo
-    luarocks
     alsa-utils
     brightnessctl
     usbutils
