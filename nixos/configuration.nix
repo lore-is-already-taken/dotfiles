@@ -15,6 +15,9 @@
   #
   boot.kernelModules = [ "nvidia_uvm" "nvidia_modeset" "nvidia_drm" "nvidia" ];
   boot.kernelParams = [ "nvidia-drm.modeset=1" ];
+  boot.extraModulePackages = [ 
+    config.boot.kernelPackages.rtl8821au
+  ];
 
   hardware.graphics = {
     enable = true;
@@ -63,6 +66,9 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  
+  # WiFi firmware and drivers
+  hardware.enableRedistributableFirmware = true;
 
   # Set your time zone.
   time.timeZone = "America/Santiago";
