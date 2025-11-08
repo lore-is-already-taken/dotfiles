@@ -207,6 +207,36 @@
     steam
     burp
     burpsuite
+    
+    # Editor
+    neovim
+    
+    # Security/Hacking Tools
+    nmap
+    wireshark
+    tcpdump
+    netcat-gnu
+    dirb
+    gobuster
+    nikto
+    radare2
+    ghidra
+    binwalk
+    file
+    hexdump
+    john
+    hashcat
+    steghide
+    metasploit
+    sqlmap
+    hydra
+    aircrack-ng
+    wfuzz
+    exploitdb
+    hcxtools
+    ffuf
+    thc-hydra
+    exiftool
   ];
 
   #fonts.packages = with pkgs; [

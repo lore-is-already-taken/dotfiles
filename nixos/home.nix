@@ -21,22 +21,22 @@
   home.packages = with pkgs; [
     # Development tools (neovim configured separately below)
     nodejs_24
-    
+
     # Development dependencies that might need dynamic linking
     cargo
     luarocks
-    
+
     # Language servers and tools for Neovim
     nil # Nix LSP
     clang-tools
     arduino-language-server
-    
+
     # Additional development tools from dev.nix
     gnumake
     nixpkgs-fmt
     lemminx
     luajitPackages.lua-lsp
-    
+
     # Additional development tools
     go
     bun
@@ -62,7 +62,7 @@
       defaultEditor = true;
       viAlias = true;
       vimAlias = true;
-      
+
       # This allows Neovim to find and run binaries like language servers
       extraPackages = with pkgs; [
         # Language servers
@@ -71,12 +71,12 @@
         lua-language-server
         gopls
         nil
-        
+
         # Formatters
         nodePackages.prettier
         stylua
         lazygit
-        
+
         # Other tools Neovim might need
         ripgrep
         fd
