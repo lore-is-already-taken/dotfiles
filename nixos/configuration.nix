@@ -15,7 +15,7 @@
   #
   boot.kernelModules = [ "nvidia_uvm" "nvidia_modeset" "nvidia_drm" "nvidia" ];
   boot.kernelParams = [ "nvidia-drm.modeset=1" ];
-  boot.extraModulePackages = [ 
+  boot.extraModulePackages = [
     config.boot.kernelPackages.rtl8821au
   ];
 
@@ -66,7 +66,7 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
-  
+
   # WiFi firmware and drivers
   hardware.enableRedistributableFirmware = true;
 
@@ -213,10 +213,11 @@
     steam
     burp
     burpsuite
-    
+    macchanger
+    ettercap
     # Editor
     neovim
-    
+
     # Security/Hacking Tools
     nmap
     wireshark

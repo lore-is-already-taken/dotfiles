@@ -22,6 +22,7 @@
     binwalk
     file
     hexdump
+    macchanger
 
     # Cryptography and forensics
     john
