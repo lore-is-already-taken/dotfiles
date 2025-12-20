@@ -187,6 +187,7 @@
     google-chrome
     spotify
     wget
+    gcc
     thunderbird
     brave
     kitty
