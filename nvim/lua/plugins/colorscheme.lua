@@ -33,6 +33,17 @@ return {
     --   end,
     -- },
     {
+      "rose-pine/neovim",
+      name = "rose-pine",
+      priority = 1000,
+      opts = {
+        variant = "main", -- main, moon, or dawn
+        dark_variant = "main",
+        disable_background = false,
+        disable_float_background = false,
+      },
+    },
+    {
       "catppuccin/nvim",
       name = "catppuccin",
       priority = 1000,
@@ -103,10 +114,11 @@ return {
         })
       end,
     },
+
     {
       "LazyVim/LazyVim",
       opts = {
-        colorscheme = "gentleman-kanagawa-blur",
+        colorscheme = "rose-pine",
       },
     },
   },
