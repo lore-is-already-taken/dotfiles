@@ -16,10 +16,6 @@ return {
     enabled = false,
   },
   {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    enabled = false,
-  },
-  {
     "sudo-tee/opencode.nvim",
     enabled = false,
   },
