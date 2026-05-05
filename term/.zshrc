@@ -58,6 +58,8 @@ export PATH=$PATH:/usr/local/go/bin
 export PATH="$HOME/.local/bin:$PATH"
 export PATH=$PATH:$HOME/bin
 export PATH=$PATH:$HOME/go/bin
+# opencode
+export PATH=/home/ivn/.opencode/bin:$PATH
 # Manual aliases
 alias ll='lsd -lh --group-dirs=first'
 alias la='lsd -a --group-dirs=first'
@@ -154,5 +156,4 @@ export NVM_DIR="$HOME/.nvm"
 
 # Load Angular CLI autocompletion.
 #source <(ng completion script)
-source ~/powerlevel10k/powerlevel10k.zsh-theme
 source ~/powerlevel10k/powerlevel10k.zsh-theme
