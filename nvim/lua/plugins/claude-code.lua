@@ -3,7 +3,7 @@ return {
   dependencies = { "folke/snacks.nvim" },
   opts = {
     terminal = {
-      split_side = "left",
+      split_side = "right",
       split_width_percentage = 0.30,
       provider = "snacks",
     },
