@@ -1,55 +1,63 @@
--- This file contains the configuration overrides for specific Neovim plugins.
-
 return {
-  -- Change configuration for trouble.nvim
   {
-    -- Plugin: trouble.nvim
-    -- URL: https://github.com/folke/trouble.nvim
-    -- Description: A pretty list for showing diagnostics, references, telescope results, quickfix and location lists.
     "folke/trouble.nvim",
-    -- Options to be merged with the parent specification
-    opts = { use_diagnostic_signs = true }, -- Use diagnostic signs for trouble.nvim
+    opts = { use_diagnostic_signs = true },
   },
 
-  -- Add symbols-outline.nvim plugin
   {
-    -- Plugin: symbols-outline.nvim
-    -- URL: https://github.com/simrat39/symbols-outline.nvim
-    -- Description: A tree like view for symbols in Neovim using the Language Server Protocol.
     "simrat39/symbols-outline.nvim",
-    cmd = "SymbolsOutline", -- Command to open the symbols outline
-    keys = { { "<leader>cs", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } }, -- Keybinding to open the symbols outline
-    config = true, -- Use default configuration
+    cmd = "SymbolsOutline",
+    keys = { { "<leader>cs", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
+    config = true,
   },
 
-  -- Remove inlay hints from default configuration
   {
-    -- Plugin: nvim-lspconfig
-    -- URL: https://github.com/neovim/nvim-lspconfig
-    -- Description: Quickstart configurations for the Neovim LSP client.
     "neovim/nvim-lspconfig",
-    event = "VeryLazy", -- Load this plugin on the 'VeryLazy' event
-    opts = {
-      inlay_hints = { enabled = false }, -- Disable inlay hints
-      servers = {
-        angularls = {
-          -- Configuration for Angular Language Server
-          root_dir = function(fname)
-            return require("lspconfig.util").root_pattern("angular.json", "project.json")(fname)
-          end,
+    event = "VeryLazy",
+    opts = function(_, opts)
+      opts.inlay_hints = vim.tbl_deep_extend("force", opts.inlay_hints or {}, { enabled = false })
+
+      opts.servers = opts.servers or {}
+      opts.servers.angularls = {
+        root_dir = function(fname)
+          return require("lspconfig.util").root_pattern("angular.json", "project.json")(fname)
+        end,
+      }
+      opts.servers.nil_ls = {
+        -- nil is installed via Nix (not Mason); format with nixpkgs-fmt on save
+        cmd = { "nil" },
+        autostart = true,
+        mason = false,
+        settings = {
+          ["nil"] = { formatting = { command = { "nixpkgs-fmt" } } },
         },
-        nil_ls = {
-          -- Configuration for nil (Nix Language Server), already installed via nix
-          cmd = { "nil" },
-          autostart = true,
-          mason = false, -- Explicitly disable mason management for nil_ls
-          settings = {
-            ["nil"] = {
-              formatting = { command = { "nixpkgs-fmt" } },
-            },
-          },
-        },
-      },
-    },
+      }
+
+      -- Drop the gopls semantic-tokens workaround shipped with the lang/go
+      -- extra: it reads client.config.capabilities.textDocument, which is nil
+      -- under the new vim.lsp.config / vim.lsp.enable flow in LazyVim 15.x.
+      -- Modern gopls exposes semanticTokensProvider natively.
+      opts.setup = opts.setup or {}
+      opts.setup.gopls = function() end
+    end,
+  },
+
+  -- Go: real tabs (gofmt/gofumpt convention) shown as 4 columns.
+  -- LazyVim defaults to tabstop=2, shiftwidth=2, expandtab=true which fights
+  -- the formatter on save. The augroup makes this safe across :Lazy reload.
+  {
+    "LazyVim/LazyVim",
+    opts = function()
+      local group = vim.api.nvim_create_augroup("go_filetype", { clear = true })
+      vim.api.nvim_create_autocmd("FileType", {
+        group = group,
+        pattern = "go",
+        callback = function()
+          vim.opt_local.tabstop = 4
+          vim.opt_local.shiftwidth = 4
+          vim.opt_local.expandtab = false
+        end,
+      })
+    end,
   },
 }
