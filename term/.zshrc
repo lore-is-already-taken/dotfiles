@@ -1,3 +1,4 @@
+# zmodload zsh/zprof
 # ============================================================================
 # Environment
 # ============================================================================
@@ -35,8 +36,13 @@ bindkey "^[[3~" delete-char
 # Completion system
 # ============================================================================
 
+# Carga rápida de compinit usando caché diario
 autoload -Uz compinit
-compinit
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.m-1) ]]; then
+  compinit -C
+else
+  compinit
+fi
 
 # Single source of truth — last assignment wins, so we keep only the final
 # values and drop the conflicting earlier ones.
@@ -165,12 +171,18 @@ fzf-lovely() {
 
 # Secure file deletion
 rmk() {
-  command -v scrub >/dev/null 2>&1 && scrub -p dod "$1"
+  # check if scrub is installed
+  if command -v scrub >/dev/null 2>&1; then
+    scrub -p dod "$1"
+  else
+    echo "scrub not installed. Using shred only"
+  fi
+
+  # shred se ejecuta siempre, independientemente de lo anterior
   shred -zun 10 -v "$1"
 }
 
 # ============================================================================
 # Finalize Powerlevel10k instant prompt — MUST stay at the bottom
 # ============================================================================
-
 (( ! ${+functions[p10k-instant-prompt-finalize]} )) || p10k-instant-prompt-finalize
