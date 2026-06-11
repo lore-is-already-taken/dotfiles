@@ -1,0 +1,145 @@
+# =============================================================================
+# Powerlevel10k instant prompt — must stay near the top
+# =============================================================================
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# =============================================================================
+# History
+# =============================================================================
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE=~/.zsh_history
+setopt histignorealldups sharehistory
+
+# =============================================================================
+# Keybindings
+# =============================================================================
+bindkey -e
+bindkey "^[[H"  beginning-of-line
+bindkey "^[[F"  end-of-line
+bindkey "^[[3~" delete-char
+
+# =============================================================================
+# Completion
+# =============================================================================
+autoload -Uz compinit
+compinit
+
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu select=long
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+
+# Optional GNU dircolors (provided by `brew install coreutils` as gdircolors)
+if command -v dircolors >/dev/null 2>&1; then
+  eval "$(dircolors -b)"
+elif command -v gdircolors >/dev/null 2>&1; then
+  eval "$(gdircolors -b)"
+fi
+
+# =============================================================================
+# PATH
+# =============================================================================
+export PATH="/opt/homebrew/bin:$PATH"
+export PATH="/opt/homebrew/opt/python@3.14/libexec/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
+# Google Cloud SDK
+[ -f "$HOME/apps/cli/google-cloud-sdk/path.zsh.inc" ]       && source "$HOME/apps/cli/google-cloud-sdk/path.zsh.inc"
+[ -f "$HOME/apps/cli/google-cloud-sdk/completion.zsh.inc" ] && source "$HOME/apps/cli/google-cloud-sdk/completion.zsh.inc"
+
+# =============================================================================
+# Aliases
+# =============================================================================
+alias ll='lsd -lh --group-dirs=first'
+alias la='lsd -a --group-dirs=first'
+alias l='lsd --group-dirs=first'
+alias lla='lsd -lha --group-dirs=first'
+alias ls='lsd --group-dirs=first'
+alias cat='bat'
+alias catn='/run/current-system/sw/bin/cat'   # NixOS path; only works under nix
+
+# =============================================================================
+# Functions
+# =============================================================================
+mkt() { mkdir scan content scripts; }
+
+# Extract open ports + IP from an nmap scan and copy to macOS clipboard
+extractPorts() {
+  local ports ip_address
+  ports=$(grep -oE '[0-9]{1,5}/open' "$1" | awk -F/ '{print $1}' | xargs | tr ' ' ',')
+  ip_address=$(grep -oE '[0-9]{1,3}(\.[0-9]{1,3}){3}' "$1" | sort -u | head -n 1)
+  printf '\n[*] Extracting information...\n\n\t[*] IP Address: %s\n\t[*] Open ports: %s\n\n' "$ip_address" "$ports"
+  printf '%s' "$ports" | pbcopy
+  echo "[*] Ports copied to clipboard"
+}
+
+# Coloured man pages
+man() {
+  env \
+    LESS_TERMCAP_mb=$'\e[01;31m' \
+    LESS_TERMCAP_md=$'\e[01;31m' \
+    LESS_TERMCAP_me=$'\e[0m' \
+    LESS_TERMCAP_se=$'\e[0m' \
+    LESS_TERMCAP_so=$'\e[01;44;33m' \
+    LESS_TERMCAP_ue=$'\e[0m' \
+    LESS_TERMCAP_us=$'\e[01;32m' \
+    man "$@"
+}
+
+# fzf with file preview ("h" for horizontal/reverse layout)
+fzf-lovely() {
+  local preview='[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file ||
+                 (bat --style=numbers --color=always {} ||
+                  highlight -O ansi -l {} ||
+                  coderay {} || rougify {} || cat {}) 2>/dev/null | head -500'
+  if [ "$1" = "h" ]; then
+    fzf -m --reverse --preview-window down:20 --preview "$preview"
+  else
+    fzf -m --preview "$preview"
+  fi
+}
+
+# Secure-delete (requires `scrub` and `shred` — install via coreutils + scrub)
+rmk() {
+  scrub -p dod "$1"
+  shred -zun 10 -v "$1"
+}
+
+# Nix dev shells (require nix to be installed)
+hack() { nix-shell ~/repos/dotfiles/nix-shells/sec.nix; }
+dev()  { nix-shell ~/repos/dotfiles/nix-shells/dev.nix; }
+ia()   { nix-shell ~/repos/dotfiles/nix-shells/lmstudio.nix; }
+
+# =============================================================================
+# zsh plugins
+# =============================================================================
+[ -f ~/repos/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source ~/repos/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[ -f ~/repos/zsh-autosuggestions/zsh-autosuggestions.zsh ]         && source ~/repos/zsh-autosuggestions/zsh-autosuggestions.zsh
+[ -f ~/repos/zsh-sudo/sudo.plugin.zsh ]                            && source ~/repos/zsh-sudo/sudo.plugin.zsh
+
+# fzf keybindings + completion (Homebrew)
+[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ] && source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
+[ -f /opt/homebrew/opt/fzf/shell/completion.zsh ]   && source /opt/homebrew/opt/fzf/shell/completion.zsh
+
+# =============================================================================
+# Powerlevel10k theme — must come AFTER plugins
+# =============================================================================
+[ -f ~/powerlevel10k/powerlevel10k.zsh-theme ] && source ~/powerlevel10k/powerlevel10k.zsh-theme
+[ -f ~/.p10k.zsh ]                             && source ~/.p10k.zsh
+
+# Powerlevel10k instant-prompt finalize — keep at the very bottom
+(( ! ${+functions[p10k-instant-prompt-finalize]} )) || p10k-instant-prompt-finalize
