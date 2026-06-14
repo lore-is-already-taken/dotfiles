@@ -33,6 +33,10 @@ return {
     --   end,
     -- },
     {
+      "scottmckendry/cyberdream.nvim",
+      priority = 1000,
+    },
+    {
       "rose-pine/neovim",
       name = "rose-pine",
       priority = 1000,
@@ -60,14 +64,13 @@ return {
     },
     {
       "Alan-TheGentleman/oldworld.nvim",
-      lazy = false,
       priority = 1000,
       opts = {},
     },
     {
       "rebelot/kanagawa.nvim",
       priority = 1000,
-      lazy = true,
+      lazy = false,
       config = function()
         require("kanagawa").setup({
           compile = false, -- enable compiling the colorscheme

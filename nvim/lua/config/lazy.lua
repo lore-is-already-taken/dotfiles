@@ -1,16 +1,5 @@
 -- This file contains the configuration for setting up the lazy.nvim plugin manager in Neovim.
-
--- Node.js configuration - always use latest stable version
-vim.g.node_host_prog = vim.fn.exepath("node") or "/usr/local/bin/node"
--- Ensure we're using a recent Node version for LSPs and plugins
-if vim.fn.executable("node") == 1 then
-  local node_version = vim.fn.system("node --version"):gsub("\n", "")
-  print("Using Node.js version: " .. node_version)
-end
-
--- Spell-checking
-vim.opt.spell = true -- activa spell checker
-vim.opt.spelllang = { "en" }
+-- Node.js host is configured in config/nodejs.lua (loaded from init.lua before this file).
 
 -- Define the path to the lazy.nvim plugin
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -25,23 +14,6 @@ end
 
 -- Prepend the lazy.nvim path to the runtime path
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
-
--- Fix copy and paste in WSL (Windows Subsystem for Linux)
-vim.opt.clipboard = "unnamedplus" -- Use the system clipboard for all operations
-if vim.fn.has("wsl") == 1 then
-  vim.g.clipboard = {
-    name = "win32yank", -- Use win32yank for clipboard operations
-    copy = {
-      ["+"] = "win32yank.exe -i --crlf", -- Command to copy to the system clipboard
-      ["*"] = "win32yank.exe -i --crlf", -- Command to copy to the primary clipboard
-    },
-    paste = {
-      ["+"] = "win32yank.exe -o --lf", -- Command to paste from the system clipboard
-      ["*"] = "win32yank.exe -o --lf", -- Command to paste from the primary clipboard
-    },
-    cache_enabled = false, -- Disable clipboard caching
-  }
-end
 
 -- Setup lazy.nvim with the specified configuration
 require("lazy").setup({
