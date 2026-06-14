@@ -2,9 +2,10 @@ return {
   "coder/claudecode.nvim",
   dependencies = { "folke/snacks.nvim" },
   opts = {
+    focus_after_send = true,
     terminal = {
       split_side = "right",
-      split_width_percentage = 0.30,
+      split_width_percentage = 0.35,
       provider = "snacks",
     },
   },
@@ -26,8 +27,5 @@ return {
     -- Diff management
     { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
     { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
-    -- Preserved existing keymaps
-    { "<leader>at", "<cmd>ClaudeCodeContinue<cr>", desc = "Continue recent conversation" },
-    { "<leader>av", "<cmd>ClaudeCodeVerbose<cr>", desc = "Verbose logging" },
   },
 }
