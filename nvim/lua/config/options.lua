@@ -2,9 +2,14 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 
+-- Line numbers: absolute only (LazyVim enables relativenumber by default)
+vim.opt.relativenumber = false
+
 -- Spell-checking
 vim.opt.spell = true -- enable spell checker
 vim.opt.spelllang = { "en" }
+-- Keep custom dictionary words version-controlled in this repo
+vim.opt.spellfile = vim.fn.expand("~/repos/dotfiles/nvim/spell/en.utf-8.add")
 
 -- Clipboard: use the system clipboard for all operations
 vim.opt.clipboard = "unnamedplus"
