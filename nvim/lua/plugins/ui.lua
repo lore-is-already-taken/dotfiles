@@ -144,6 +144,16 @@ return {
         kitty = { enabled = false, font = "+2" }, -- Disable kitty integration and set font size
         twilight = { enabled = true }, -- Enable twilight integration
       },
+      -- Keep an 8-line margin above/below the cursor while in Zen Mode, so the
+      -- code only scrolls once the cursor gets near the edge instead of on every
+      -- move. The original value is restored on close.
+      on_open = function()
+        vim.b.zen_scrolloff = vim.o.scrolloff
+        vim.o.scrolloff = 8
+      end,
+      on_close = function()
+        vim.o.scrolloff = vim.b.zen_scrolloff or 4
+      end,
     },
     keys = { { "<leader>z", "<cmd>ZenMode<cr>", desc = "Zen Mode" } }, -- Keybinding to toggle Zen Mode
   },
