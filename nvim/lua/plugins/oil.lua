@@ -4,8 +4,15 @@
 return {
   "stevearc/oil.nvim",
 
-  -- Load Oil when opening a directory or when using the keymap
-  lazy = false,
+  -- Lazy load unless we are explicitly opening a directory
+  lazy = true,
+
+  init = function()
+    -- Fast detection to load Oil immediately if the only argument is a directory
+    if vim.fn.argc() == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 1 then
+      require("oil")
+    end
+  end,
 
   keys = {
     { "-", "<CMD>Oil<CR>", desc = "Open Oil (parent dir)" },

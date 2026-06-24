@@ -1,1 +1,4 @@
-return { "preservim/nerdcommenter" }
+return {
+  "preservim/nerdcommenter",
+  event = "VeryLazy",
+}

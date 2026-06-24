@@ -34,11 +34,13 @@ return {
     -- },
     {
       "scottmckendry/cyberdream.nvim",
+      lazy = false,
       priority = 1000,
     },
     {
       "rose-pine/neovim",
       name = "rose-pine",
+      lazy = false,
       priority = 1000,
       opts = {
         variant = "main", -- main, moon, or dawn
@@ -50,6 +52,7 @@ return {
     {
       "catppuccin/nvim",
       name = "catppuccin",
+      lazy = false,
       priority = 1000,
       opts = {
         flavour = "mocha", -- latte, frappe, macchiato, mocha
@@ -60,17 +63,19 @@ return {
     {
       "Gentleman-Programming/gentleman-kanagawa-blur",
       name = "gentleman-kanagawa-blur",
+      lazy = false,
       priority = 1000,
     },
     {
       "Alan-TheGentleman/oldworld.nvim",
+      lazy = false,
       priority = 1000,
       opts = {},
     },
     {
       "rebelot/kanagawa.nvim",
-      priority = 1000,
       lazy = false,
+      priority = 1000,
       config = function()
         require("kanagawa").setup({
           compile = false, -- enable compiling the colorscheme

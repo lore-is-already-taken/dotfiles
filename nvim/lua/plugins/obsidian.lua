@@ -2,6 +2,8 @@ return {
   "obsidian-nvim/obsidian.nvim",
   version = "*", -- recommended, use latest release instead of latest commit
   lazy = true,
+  cmd = { "Obsidian" },
+  ft = { "markdown" },
   enabled = function()
     -- Disable Obsidian when running from Oil Simple (to avoid path issues in Zed context)
     return not vim.g.disable_obsidian
@@ -10,14 +12,24 @@ return {
     -- Required.
     "nvim-lua/plenary.nvim",
   },
-  opts = {
-    workspaces = {
-      {
-        name = "GentlemanNotes", -- Name of the workspace
-        path = os.getenv("HOME") .. "/.config/obsidian", -- Path to the notes directory
+  opts = function()
+    local vault_path = vim.fn.expand("~/.config/obsidian")
+    -- Auto-create directory if it doesn't exist to prevent obsidian.nvim crash
+    if vim.fn.isdirectory(vault_path) == 0 then
+      vim.fn.mkdir(vault_path, "p")
+    end
+
+    return {
+      -- Disable deprecated legacy commands to prevent startup warnings
+      legacy_commands = false,
+
+      workspaces = {
+        {
+          name = "GentlemanNotes", -- Name of the workspace
+          path = vault_path, -- Path to the notes directory
+        },
       },
-    },
-    completition = {
+      completition = {
       cmp = true,
     },
     picker = {
@@ -48,7 +60,7 @@ return {
       subdir = "templates", -- Subdirectory for templates
       date_format = "%Y-%m-%d-%a", -- Date format for templates
       gtime_format = "%H:%M", -- Time format for templates
-      tags = "", -- Default tags for templates
     },
-  },
+  }
+end,
 }

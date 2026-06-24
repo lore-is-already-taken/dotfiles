@@ -1,5 +1,6 @@
 return {
   "sphamba/smear-cursor.nvim",
+  event = "VeryLazy",
   opts = {
     -- Color of the smear (matches your accent orange)
     cursor_color = "#f39816",
@@ -31,7 +32,7 @@ return {
     max_length_insert_mode = 8, -- noticeable trail even in insert mode
 
     distance_stop_animating = 0.3, -- settle a touch sooner -> feels snappier
-    time_interval = 7, -- ~140fps for a smooth, fast-moving trail
+    time_interval = 33, -- ~30fps for a low-overhead trail
 
     -- ── Color / gradient drama ───────────────────────────────────
     gamma = 1.5, -- punchier color blending

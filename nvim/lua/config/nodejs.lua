@@ -49,89 +49,21 @@ local function setup_nodejs()
   local node_path = get_system_node()
 
   if node_path ~= "" then
-    local version_output = vim.fn.system(node_path .. " --version 2>/dev/null")
-    if vim.v.shell_error == 0 then
-      -- Clean version string: remove newlines, ANSI escape codes, and 'v' prefix
-      local version = version_output
-        :gsub("\r", "") -- Remove carriage returns
-        :gsub("\n", "") -- Remove newlines
-        :gsub("\27%[[%d;]*%a", "") -- Remove ANSI escape sequences
-        :gsub("^v", "") -- Remove 'v' prefix
-        :match("(%d+%.%d+%.%d+)") -- Extract version number pattern
+    if vim.fn.executable(node_path) == 1 then
+      -- Set the Node.js host program immediately
+      vim.g.node_host_prog = node_path
 
-      if version then
-        local major_version = tonumber(version:match("^(%d+)"))
-
-        if major_version and major_version >= 18 then
-          -- Set the Node.js host program
-          vim.g.node_host_prog = node_path
-
-          -- Set npm path
-          local npm_path = vim.fn.exepath("npm")
-          if npm_path ~= "" then
-            vim.g.npm_host_prog = npm_path
-          end
-
-          if vim.g.debug_nodejs or vim.env.DEBUG_NODEJS then
-            print("✓ Node.js for Neovim: " .. node_path .. " (v" .. version .. ")")
-
-            -- Detect which manager is being used
-            if node_path:match("%.volta/") then
-              print("  Using Volta-managed Node.js")
-            elseif node_path:match("%.nvm/") then
-              print("  Using NVM-managed Node.js")
-            elseif node_path:match("%.nix%-profile/") then
-              print("  Using Nix-managed Node.js")
-            elseif node_path:match("/homebrew/") then
-              print("  Using Homebrew-managed Node.js")
-            else
-              print("  Using system Node.js")
-            end
-          end
-
-          return true, version
-        else
-          -- Provide specific upgrade instructions based on the detected manager
-          local upgrade_msg = "⚠️  Node.js version "
-            .. version
-            .. " is too old. Neovim requires v18+ (v22+ recommended).\n\n"
-
-          if node_path:match("/homebrew/") then
-            upgrade_msg = upgrade_msg .. "To upgrade with Homebrew:\n  brew upgrade node"
-          elseif node_path:match("%.volta/") then
-            upgrade_msg = upgrade_msg .. "To upgrade with Volta:\n  volta install node@latest"
-          elseif node_path:match("%.nvm/") then
-            upgrade_msg = upgrade_msg .. "To upgrade with NVM:\n  nvm install --lts\n  nvm alias default lts/*"
-          elseif node_path:match("%.nix%-profile/") then
-            upgrade_msg = upgrade_msg .. "To upgrade with Nix:\n  nix profile upgrade nixpkgs#nodejs"
-          else
-            upgrade_msg = upgrade_msg .. "Please upgrade Node.js to v18 or higher using your package manager."
-          end
-
-          upgrade_msg = upgrade_msg .. "\n\nNote: Neovim uses the SYSTEM Node.js, not project-specific versions."
-
-          vim.notify(upgrade_msg, vim.log.levels.WARN)
-          vim.g.node_host_prog = node_path
-          return true, version
-        end
-      else
-        -- Handle case where version parsing failed
-        vim.notify(
-          "⚠️  Could not parse Node.js version from: "
-            .. version_output
-            .. "\nPlease ensure Node.js is properly installed.",
-          vim.log.levels.ERROR
-        )
-        return false, nil
+      -- Set npm path
+      local npm_path = vim.fn.exepath("npm")
+      if npm_path ~= "" then
+        vim.g.npm_host_prog = npm_path
       end
+
+      return true
     end
   end
 
-  vim.notify(
-    "⚠️  Node.js not found! Some plugins may not work correctly.\nInstall Node.js with:\n  brew install node",
-    vim.log.levels.ERROR
-  )
-  return false, nil
+  return false
 end
 
 -- Function to check if we're using a recent Node.js version
@@ -140,28 +72,80 @@ local function check_node_version()
     return
   end
 
-  local version_output = vim.fn.system(vim.g.node_host_prog .. " --version 2>/dev/null")
+  local node_path = vim.g.node_host_prog
+  local version_output = vim.fn.system(node_path .. " --version 2>/dev/null")
   if vim.v.shell_error ~= 0 then
     return
   end
 
-  local version = version_output:gsub("\n", ""):gsub("v", "")
-  local major_version = tonumber(version:match("^(%d+)"))
+  -- Clean version string: remove newlines, ANSI escape codes, and 'v' prefix
+  local version = version_output
+    :gsub("\r", "")
+    :gsub("\n", "")
+    :gsub("\27%[[%d;]*%a", "")
+    :gsub("^v", "")
+    :match("(%d+%.%d+%.%d+)")
 
-  if major_version then
-    if major_version >= 18 and major_version < 22 then
-      if vim.g.debug_nodejs then
-        vim.notify(
-          "ℹ️  Node.js v" .. version .. " works but v22+ is recommended for optimal performance.",
-          vim.log.levels.INFO
-        )
+  if version then
+    local major_version = tonumber(version:match("^(%d+)"))
+
+    if major_version then
+      if major_version >= 18 then
+        if vim.g.debug_nodejs or vim.env.DEBUG_NODEJS then
+          print("✓ Node.js for Neovim: " .. node_path .. " (v" .. version .. ")")
+
+          -- Detect which manager is being used
+          if node_path:match("%.volta/") then
+            print("  Using Volta-managed Node.js")
+          elseif node_path:match("%.nvm/") then
+            print("  Using NVM-managed Node.js")
+          elseif node_path:match("%.nix%-profile/") then
+            print("  Using Nix-managed Node.js")
+          elseif node_path:match("/homebrew/") then
+            print("  Using Homebrew-managed Node.js")
+          else
+            print("  Using system Node.js")
+          end
+        end
+
+        if major_version < 22 then
+          if vim.g.debug_nodejs then
+            vim.notify(
+              "ℹ️  Node.js v" .. version .. " works but v22+ is recommended for optimal performance.",
+              vim.log.levels.INFO
+            )
+          end
+        end
+      else
+        -- Provide specific upgrade instructions based on the detected manager
+        local upgrade_msg = "⚠️  Node.js version "
+          .. version
+          .. " is too old. Neovim requires v18+ (v22+ recommended).\n\n"
+
+        if node_path:match("/homebrew/") then
+          upgrade_msg = upgrade_msg .. "To upgrade with Homebrew:\n  brew upgrade node"
+        elseif node_path:match("%.volta/") then
+          upgrade_msg = upgrade_msg .. "To upgrade with Volta:\n  volta install node@latest"
+        elseif node_path:match("%.nvm/") then
+          upgrade_msg = upgrade_msg .. "To upgrade with NVM:\n  nvm install --lts\n  nvm alias default lts/*"
+        elseif node_path:match("%.nix%-profile/") then
+          upgrade_msg = upgrade_msg .. "To upgrade with Nix:\n  nix profile upgrade nixpkgs#nodejs"
+        else
+          upgrade_msg = upgrade_msg .. "Please upgrade Node.js to v18 or higher using your package manager."
+        end
+
+        upgrade_msg = upgrade_msg .. "\n\nNote: Neovim uses the SYSTEM Node.js, not project-specific versions."
+
+        vim.notify(upgrade_msg, vim.log.levels.WARN)
       end
-    elseif major_version < 18 then
-      vim.notify(
-        "⚠️  Node.js version " .. version .. " is too old. Neovim requires v18+ (v22+ recommended).",
-        vim.log.levels.WARN
-      )
     end
+  else
+    vim.notify(
+      "⚠️  Could not parse Node.js version from: "
+        .. version_output
+        .. "\nPlease ensure Node.js is properly installed.",
+      vim.log.levels.ERROR
+    )
   end
 end
 
@@ -170,10 +154,21 @@ function M.setup(opts)
   opts = opts or {}
 
   -- Setup Node.js
-  local success, version = setup_nodejs()
+  local success = setup_nodejs()
 
-  if success and not opts.silent then
-    check_node_version()
+  if success then
+    if not opts.silent then
+      vim.schedule(function()
+        check_node_version()
+      end)
+    end
+  else
+    vim.schedule(function()
+      vim.notify(
+        "⚠️  Node.js not found! Some plugins may not work correctly.\nInstall Node.js with:\n  brew install node",
+        vim.log.levels.ERROR
+      )
+    end)
   end
 
   return success

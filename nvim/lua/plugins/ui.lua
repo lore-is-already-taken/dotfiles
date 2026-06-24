@@ -30,7 +30,7 @@ return {
   -- URL: https://github.com/folke/todo-comments.nvim
   -- Description: Plugin to highlight and search for TODO, FIX, HACK, etc. comments in your code.
   -- IMPORTANT: using version "*" to fix a bug
-  { "folke/todo-comments.nvim", version = "*" },
+  { "folke/todo-comments.nvim", version = "*", event = "VeryLazy" },
 
   -- Plugin: folke/which-key.nvim
   -- URL: https://github.com/folke/which-key.nvim
