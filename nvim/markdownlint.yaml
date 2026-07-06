@@ -1,0 +1,7 @@
+# Global markdownlint rules for Neovim (referenced by lua/plugins/nvim-lint.lua).
+# Keep all default rules, with two cosmetic ones disabled:
+#   MD013 (line-length): prose is one paragraph = one physical line.
+#   MD060 (table-column-style): don't nag about table pipe spacing.
+default: true
+MD013: false
+MD060: false

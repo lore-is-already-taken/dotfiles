@@ -36,6 +36,18 @@ return {
       "scottmckendry/cyberdream.nvim",
       lazy = false,
       priority = 1000,
+      config = function()
+        require("cyberdream").setup({
+          -- Transparent so the terminal/wallpaper shows through, like the upstream screenshots
+          transparent = true,
+          saturation = 1, -- 0-1, lower desaturates the vibrant palette
+          italic_comments = true,
+          hide_fillchars = true, -- cleaner window separators
+          borderless_pickers = true, -- seamless Telescope/picker windows
+          terminal_colors = true, -- sync the integrated terminal palette
+          cache = false,
+        })
+      end,
     },
     {
       "rose-pine/neovim",
