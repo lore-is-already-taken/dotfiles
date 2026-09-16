@@ -25,7 +25,12 @@ bindkey "^[[3~" delete-char
 # Completion
 # =============================================================================
 autoload -Uz compinit
-compinit
+# Skip expensive file ownership checks on startup if zcompdump is recent
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.m+1) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
@@ -56,6 +61,9 @@ fi
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/opt/python@3.14/libexec/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+
+# Personal scripts from this dotfiles repo (python-init, ...)
+export PATH="$HOME/repos/dotfiles/term/usefull_scripts:$PATH"
 
 # Google Cloud SDK
 [ -f "$HOME/apps/cli/google-cloud-sdk/path.zsh.inc" ]       && source "$HOME/apps/cli/google-cloud-sdk/path.zsh.inc"

@@ -69,7 +69,7 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 # PATH — single declaration, ordered by priority
 # ============================================================================
 
-export PATH="$HOME/.local/bin:$HOME/bin:$HOME/go/bin:$HOME/.opencode/bin:/usr/local/go/bin:$PATH"
+export PATH="$HOME/repos/dotfiles/term/usefull_scripts:$HOME/.local/bin:$HOME/bin:$HOME/go/bin:$HOME/.opencode/bin:/usr/local/go/bin:$PATH"
 
 # ============================================================================
 # Aliases (with existence checks for non-standard tools)
