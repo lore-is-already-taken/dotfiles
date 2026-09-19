@@ -69,7 +69,7 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 # PATH — single declaration, ordered by priority
 # ============================================================================
 
-export PATH="$HOME/.local/bin:$HOME/bin:$HOME/go/bin:$HOME/.opencode/bin:/usr/local/go/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/bin:$HOME/go/bin:$HOME/.opencode/bin:/usr/local/go/bin:$HOME/.deno/bin:$PATH"
 
 # ============================================================================
 # Aliases (with existence checks for non-standard tools)
@@ -144,7 +144,16 @@ EOF
   cat extractPorts.tmp
   rm extractPorts.tmp
 }
-
+clipimg() {
+  local out="${1:-/tmp/clip-$(date +%s).png}"
+  if ! xclip -selection clipboard -t TARGETS -o 2>/dev/null | grep -q '^image/'; then
+    echo "El clipboard no contiene una imagen" >&2
+    return 1
+  fi
+  xclip -selection clipboard -t image/png -o > "$out" || return 1
+  echo -n "$out" | xclip -selection clipboard
+  echo "$out"
+}
 # Colored man pages
 man() {
   env \
@@ -186,3 +195,8 @@ rmk() {
 # Finalize Powerlevel10k instant prompt — MUST stay at the bottom
 # ============================================================================
 (( ! ${+functions[p10k-instant-prompt-finalize]} )) || p10k-instant-prompt-finalize
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/ivn/.local/bin:$PATH"
+export PATH=~/.npm-global/bin:$PATH

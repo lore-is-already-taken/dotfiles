@@ -35,6 +35,9 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.linting.eslint" },
 
     -- Language support plugins
+    -- clangd: C/C++ para el firmware ESP32. Los ajustes propios del toolchain
+    -- cruzado (query-driver, root markers) estan en plugins/platformio.lua.
+    { import = "lazyvim.plugins.extras.lang.clangd" },
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.lang.markdown" },
     { import = "lazyvim.plugins.extras.lang.typescript" },

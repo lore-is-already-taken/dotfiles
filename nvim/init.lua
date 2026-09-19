@@ -1,4 +1,5 @@
 -- Configure Node.js before loading plugins
+vim.opt.termguicolors = true
 require("config.nodejs").setup({ silent = true })
 
 -- bootstrap lazy.nvim, LazyVim and your plugins
