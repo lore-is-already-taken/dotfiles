@@ -25,7 +25,12 @@ bindkey "^[[3~" delete-char
 # Completion
 # =============================================================================
 autoload -Uz compinit
-compinit
+# Skip expensive file ownership checks on startup if zcompdump is recent
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.m+1) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
@@ -56,6 +61,9 @@ fi
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/opt/python@3.14/libexec/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+
+# Personal scripts from this dotfiles repo (python-init, ...)
+export PATH="$HOME/repos/dotfiles/term/usefull_scripts:$PATH"
 
 # Google Cloud SDK
 [ -f "$HOME/apps/cli/google-cloud-sdk/path.zsh.inc" ]       && source "$HOME/apps/cli/google-cloud-sdk/path.zsh.inc"
@@ -124,6 +132,51 @@ hack() { nix-shell ~/repos/dotfiles/nix-shells/sec.nix; }
 dev()  { nix-shell ~/repos/dotfiles/nix-shells/dev.nix; }
 ia()   { nix-shell ~/repos/dotfiles/nix-shells/lmstudio.nix; }
 
+# Sync a git repo: fetch everything, create a local branch for every remote
+# branch, and fast-forward every local branch that tracks a remote.
+sync-repo() {
+  git rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
+    print -u2 "sync-repo: not a git repository"
+    return 1
+  }
+
+  local remote current branch
+  remote=${1:-origin}
+  git remote get-url "$remote" >/dev/null 2>&1 || remote=$(git remote | head -n1)
+  [[ -n "$remote" ]] || { print -u2 "sync-repo: no remote configured"; return 1; }
+
+  print "[*] Fetching from $remote..."
+  git fetch --all --prune --tags || return 1
+
+  # Materialize remote-only branches as local tracking branches
+  for branch in ${(f)"$(git for-each-ref --format='%(refname:strip=3)' "refs/remotes/$remote")"}; do
+    [[ -z "$branch" || "$branch" == HEAD ]] && continue
+    git show-ref --verify --quiet "refs/heads/$branch" && continue
+    git branch --track "$branch" "$remote/$branch" >/dev/null 2>&1 &&
+      print "[+] created $branch"
+  done
+
+  # Fast-forward every local branch (current one included) to its upstream
+  current=$(git symbolic-ref --quiet --short HEAD)
+  for branch in ${(f)"$(git for-each-ref --format='%(refname:short)' refs/heads)"}; do
+    [[ -z "$branch" ]] && continue
+    if [[ "$branch" == "$current" ]]; then
+      if git pull --ff-only >/dev/null 2>&1; then
+        print "[=] $branch synced"
+      else
+        print "[!] $branch could not fast-forward (diverged or dirty tree)"
+      fi
+    elif git fetch "$remote" "$branch:$branch" >/dev/null 2>&1; then
+      print "[=] $branch synced"
+    else
+      print "[-] $branch skipped (no upstream or diverged)"
+    fi
+  done
+
+  print "[*] Done. Local branches:"
+  git branch --list
+}
+
 # =============================================================================
 # zsh plugins
 # =============================================================================
@@ -143,3 +196,7 @@ ia()   { nix-shell ~/repos/dotfiles/nix-shells/lmstudio.nix; }
 
 # Powerlevel10k instant-prompt finalize — keep at the very bottom
 (( ! ${+functions[p10k-instant-prompt-finalize]} )) || p10k-instant-prompt-finalize
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/lorenzo/.local/bin:$PATH"

@@ -1,0 +1,383 @@
+#!/usr/bin/env bash
+#
+# python-init — scaffold a modern Python project with uv.
+#
+# Usage:
+#   python-init <project-name> [python-version]
+#
+# Produces a src-layout project with typed settings, a committed lockfile,
+# and linting plus type checking wired to the local virtualenv.
+
+set -euo pipefail
+
+NAME="${1:-}"
+PYVER="${2:-3.13}"
+
+if [[ -z "$NAME" ]]; then
+  echo "usage: python-init <project-name> [python-version]" >&2
+  exit 64
+fi
+
+if ! command -v uv >/dev/null 2>&1; then
+  echo "error: uv is not installed. See https://docs.astral.sh/uv/" >&2
+  exit 69
+fi
+
+if [[ -e "$NAME" ]]; then
+  echo "error: '$NAME' already exists" >&2
+  exit 73
+fi
+
+# Package name is the import name: kebab-case project -> snake_case module.
+PKG="${NAME//-/_}"
+RUFF_TARGET="py${PYVER//./}"
+
+# Pin the build backend to the installed uv's minor series, the way uv itself
+# does. Reading it at runtime keeps the template valid as uv moves forward.
+UV_VERSION="$(uv --version | { read -r _ v _; echo "${v}"; })"
+UV_MAJOR="${UV_VERSION%%.*}"
+UV_REST="${UV_VERSION#*.}"
+UV_MINOR="${UV_REST%%.*}"
+UV_BUILD_MIN="${UV_MAJOR}.${UV_MINOR}.0"
+UV_BUILD_MAX="${UV_MAJOR}.$((UV_MINOR + 1)).0"
+
+mkdir -p "$NAME/src/$PKG" "$NAME/tests"
+cd "$NAME"
+
+# --- pyproject.toml ----------------------------------------------------------
+cat > pyproject.toml <<PYPROJECT
+[project]
+name = "$NAME"
+version = "0.1.0"
+description = "TODO: describe this project."
+readme = "README.md"
+requires-python = ">=$PYVER"
+# Runtime dependencies use >= floors: they declare the minimum API this code
+# needs. Exact versions live in uv.lock, which is what makes installs
+# reproducible. Pinning == here only removes resolver headroom.
+dependencies = [
+    "pydantic-settings>=2.7.0",
+]
+
+# PEP 735 dependency groups are local-only and never ship in the built wheel.
+# Dev tooling belongs here, not in [project.optional-dependencies], which
+# publishes installable extras to anyone who consumes this package.
+[dependency-groups]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-cov>=6.0.0",
+    "pyright>=1.1.390",
+    "ruff>=0.16.5",
+]
+
+[build-system]
+requires = ["uv_build>=$UV_BUILD_MIN,<$UV_BUILD_MAX"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "$PKG"
+module-root = "src"
+
+# Point the type checker at the local virtualenv. Without this, Pyright
+# resolves imports against the system interpreter and reports every
+# third-party package as missing.
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+include = ["src", "tests"]
+typeCheckingMode = "standard"
+pythonVersion = "$PYVER"
+
+[tool.ruff]
+line-length = 88
+target-version = "$RUFF_TARGET"
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes: undefined names, unused imports
+    "I",    # isort: import ordering
+    "N",    # pep8-naming
+    "UP",   # pyupgrade: modern syntax for the target version
+    "B",    # flake8-bugbear: likely bugs
+    "C4",   # flake8-comprehensions
+    "SIM",  # flake8-simplify
+    "ARG",  # unused arguments
+    "PTH",  # prefer pathlib over os.path
+    "D",    # pydocstyle
+    "RUF",  # ruff-specific rules
+]
+ignore = [
+    "E501",  # line length is enforced by the formatter
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+# Tests document themselves through their names, and fixtures are injected
+# by pytest without always being referenced.
+"tests/**/*.py" = ["D", "ARG"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["$PKG"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Note the absence of pythonpath: the editable install of src/ is what makes
+# imports resolve, so tests import the package exactly as production does.
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+PYPROJECT
+
+# --- .python-version ---------------------------------------------------------
+echo "$PYVER" > .python-version
+
+# --- .gitignore --------------------------------------------------------------
+cat > .gitignore <<'GITIGNORE'
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info/
+
+# Virtual environments
+.venv/
+
+# Tooling caches
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local secrets. .env.example is committed; .env never is.
+.env
+.env.*
+!.env.example
+GITIGNORE
+
+# --- .env.example ------------------------------------------------------------
+cat > .env.example <<'ENVEXAMPLE'
+# Committed template for local configuration.
+#
+# Copy to .env and fill in real values:
+#   cp .env.example .env
+#
+# Every variable read by the application must appear here, so the required
+# configuration surface is reviewable in git without exposing any secret.
+
+ENVIRONMENT=local
+LOG_LEVEL=INFO
+ENVEXAMPLE
+
+cp .env.example .env
+
+# --- src/<pkg>/__init__.py ---------------------------------------------------
+cat > "src/$PKG/__init__.py" <<INITPY
+"""$NAME package."""
+
+__version__ = "0.1.0"
+INITPY
+
+# --- src/<pkg>/config.py -----------------------------------------------------
+cat > "src/$PKG/config.py" <<'CONFIGPY'
+"""Typed application settings.
+
+Configuration is read once, validated once, and exposed through a single
+accessor. Reading os.environ at the point of use scatters defaults across the
+codebase and defers failure until the unlucky code path actually runs.
+"""
+
+from functools import lru_cache
+from typing import Literal
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    """Values sourced from the process environment, falling back to `.env`.
+
+    A missing or malformed required value raises on first access rather than
+    silently substituting a default.
+    """
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        # `.env` is commonly shared with other tools, so unknown keys are
+        # tolerated. Switch to "forbid" to catch typos in a dedicated file.
+        extra="ignore",
+    )
+
+    environment: Literal["local", "staging", "production"] = "local"
+    log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
+
+
+@lru_cache
+def get_settings() -> Settings:
+    """Return the process-wide settings instance.
+
+    The cache keeps validation to a single pass and gives tests a seam:
+    call `get_settings.cache_clear()` after patching the environment.
+    """
+    return Settings()
+CONFIGPY
+
+# --- src/<pkg>/main.py -------------------------------------------------------
+cat > "src/$PKG/main.py" <<'MAINPY'
+"""Application entry point."""
+
+from .config import get_settings
+
+
+def main() -> None:
+    """Run the application."""
+    settings = get_settings()
+    print(f"running in {settings.environment} at log level {settings.log_level}")
+
+
+if __name__ == "__main__":
+    main()
+MAINPY
+
+# --- tests -------------------------------------------------------------------
+touch tests/__init__.py
+
+cat > tests/test_config.py <<TESTPY
+"""Tests for settings loading."""
+
+import pathlib
+
+import pytest
+from pydantic import ValidationError
+
+from $PKG.config import Settings, get_settings
+
+
+@pytest.fixture(autouse=True)
+def _isolated_environment(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: pathlib.Path
+) -> None:
+    """Give each test an empty environment and a directory with no \`.env\`."""
+    monkeypatch.chdir(tmp_path)
+    for key in ("ENVIRONMENT", "LOG_LEVEL"):
+        monkeypatch.delenv(key, raising=False)
+    get_settings.cache_clear()
+
+
+def test_defaults_apply_when_nothing_is_set() -> None:
+    assert Settings().environment == "local"
+
+
+def test_process_environment_overrides_default(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("ENVIRONMENT", "production")
+    assert Settings().environment == "production"
+
+
+def test_dotenv_file_is_read(tmp_path: pathlib.Path) -> None:
+    (tmp_path / ".env").write_text("ENVIRONMENT=staging\\n")
+    assert Settings().environment == "staging"
+
+
+def test_process_environment_wins_over_dotenv(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: pathlib.Path
+) -> None:
+    (tmp_path / ".env").write_text("ENVIRONMENT=staging\\n")
+    monkeypatch.setenv("ENVIRONMENT", "production")
+    assert Settings().environment == "production"
+
+
+def test_invalid_value_is_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ENVIRONMENT", "not-a-real-environment")
+    with pytest.raises(ValidationError):
+        Settings()
+
+
+def test_settings_accessor_is_cached() -> None:
+    assert get_settings() is get_settings()
+TESTPY
+
+# --- README ------------------------------------------------------------------
+T='```'
+cat > README.md <<README
+# $NAME
+
+TODO: describe this project.
+
+## Setup
+
+${T}bash
+cp .env.example .env
+uv sync
+${T}
+
+\`uv sync\` creates \`.venv\`, installs runtime and dev dependencies, and installs
+\`src/$PKG\` in editable mode so imports resolve without path manipulation.
+
+## Commands
+
+${T}bash
+uv run $NAME           # run the entry point
+uv run pytest          # run tests
+uv run ruff check .    # lint
+uv run ruff format .   # format
+uv run pyright         # type check
+${T}
+
+## Dependencies
+
+${T}bash
+uv add <package>              # runtime dependency
+uv add --dev <package>        # dev-only dependency
+uv lock --upgrade-package <package>
+uv sync                       # reconcile .venv with uv.lock
+${T}
+
+Commit \`uv.lock\`. It is what makes installs reproducible across machines and
+CI, which is why \`pyproject.toml\` declares \`>=\` floors instead of exact pins.
+README
+
+# --- entry point -------------------------------------------------------------
+# Declared after the module exists so `uv sync` can resolve it.
+python3 - "$NAME" "$PKG" <<'PATCH'
+import pathlib
+import sys
+
+cli, pkg = sys.argv[1], sys.argv[2]
+path = pathlib.Path("pyproject.toml")
+text = path.read_text()
+marker = "\n[build-system]"
+scripts = f'\n[project.scripts]\n{cli} = "{pkg}.main:main"\n'
+path.write_text(text.replace(marker, scripts + marker, 1))
+PATCH
+
+git init --quiet
+uv sync --quiet
+
+echo
+echo "created $NAME"
+echo
+uv run ruff check . && uv run pytest -q
+echo
+echo "next: cd $NAME && \$EDITOR src/$PKG/main.py"
