@@ -1,0 +1,44 @@
+#!/usr/bin/env zsh
+# Sync a git repo: fetch everything, create a local branch for every remote
+# branch, and fast-forward every local branch that tracks a remote.
+set -u
+
+git rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
+  print -u2 "sync-repo: not a git repository"
+  exit 1
+}
+
+remote=${1:-origin}
+git remote get-url "$remote" >/dev/null 2>&1 || remote=$(git remote | head -n1)
+[[ -n "$remote" ]] || { print -u2 "sync-repo: no remote configured"; exit 1; }
+
+print "[*] Fetching from $remote..."
+git fetch --all --prune --tags || exit 1
+
+# Materialize remote-only branches as local tracking branches
+for branch in ${(f)"$(git for-each-ref --format='%(refname:strip=3)' "refs/remotes/$remote")"}; do
+  [[ -z "$branch" || "$branch" == HEAD ]] && continue
+  git show-ref --verify --quiet "refs/heads/$branch" && continue
+  git branch --track "$branch" "$remote/$branch" >/dev/null 2>&1 &&
+    print "[+] created $branch"
+done
+
+# Fast-forward every local branch (current one included) to its upstream
+current=$(git symbolic-ref --quiet --short HEAD)
+for branch in ${(f)"$(git for-each-ref --format='%(refname:short)' refs/heads)"}; do
+  [[ -z "$branch" ]] && continue
+  if [[ "$branch" == "$current" ]]; then
+    if git pull --ff-only >/dev/null 2>&1; then
+      print "[=] $branch synced"
+    else
+      print "[!] $branch could not fast-forward (diverged or dirty tree)"
+    fi
+  elif git fetch "$remote" "$branch:$branch" >/dev/null 2>&1; then
+    print "[=] $branch synced"
+  else
+    print "[-] $branch skipped (no upstream or diverged)"
+  fi
+done
+
+print "[*] Done. Local branches:"
+git branch --list

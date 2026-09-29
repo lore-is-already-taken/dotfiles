@@ -83,99 +83,13 @@ alias catn='/run/current-system/sw/bin/cat'   # NixOS path; only works under nix
 # =============================================================================
 # Functions
 # =============================================================================
-mkt() { mkdir scan content scripts; }
-
-# Extract open ports + IP from an nmap scan and copy to macOS clipboard
-extractPorts() {
-  local ports ip_address
-  ports=$(grep -oE '[0-9]{1,5}/open' "$1" | awk -F/ '{print $1}' | xargs | tr ' ' ',')
-  ip_address=$(grep -oE '[0-9]{1,3}(\.[0-9]{1,3}){3}' "$1" | sort -u | head -n 1)
-  printf '\n[*] Extracting information...\n\n\t[*] IP Address: %s\n\t[*] Open ports: %s\n\n' "$ip_address" "$ports"
-  printf '%s' "$ports" | pbcopy
-  echo "[*] Ports copied to clipboard"
-}
-
-# Coloured man pages
-man() {
-  env \
-    LESS_TERMCAP_mb=$'\e[01;31m' \
-    LESS_TERMCAP_md=$'\e[01;31m' \
-    LESS_TERMCAP_me=$'\e[0m' \
-    LESS_TERMCAP_se=$'\e[0m' \
-    LESS_TERMCAP_so=$'\e[01;44;33m' \
-    LESS_TERMCAP_ue=$'\e[0m' \
-    LESS_TERMCAP_us=$'\e[01;32m' \
-    man "$@"
-}
-
-# fzf with file preview ("h" for horizontal/reverse layout)
-fzf-lovely() {
-  local preview='[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file ||
-                 (bat --style=numbers --color=always {} ||
-                  highlight -O ansi -l {} ||
-                  coderay {} || rougify {} || cat {}) 2>/dev/null | head -500'
-  if [ "$1" = "h" ]; then
-    fzf -m --reverse --preview-window down:20 --preview "$preview"
-  else
-    fzf -m --preview "$preview"
-  fi
-}
-
-# Secure-delete (requires `scrub` and `shred` — install via coreutils + scrub)
-rmk() {
-  scrub -p dod "$1"
-  shred -zun 10 -v "$1"
-}
+# Shared helpers (mkt, extractPorts, man, fzf-lovely, rmk)
+source ~/repos/dotfiles/term/functions.zsh
 
 # Nix dev shells (require nix to be installed)
 hack() { nix-shell ~/repos/dotfiles/nix-shells/sec.nix; }
 dev()  { nix-shell ~/repos/dotfiles/nix-shells/dev.nix; }
 ia()   { nix-shell ~/repos/dotfiles/nix-shells/lmstudio.nix; }
-
-# Sync a git repo: fetch everything, create a local branch for every remote
-# branch, and fast-forward every local branch that tracks a remote.
-sync-repo() {
-  git rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
-    print -u2 "sync-repo: not a git repository"
-    return 1
-  }
-
-  local remote current branch
-  remote=${1:-origin}
-  git remote get-url "$remote" >/dev/null 2>&1 || remote=$(git remote | head -n1)
-  [[ -n "$remote" ]] || { print -u2 "sync-repo: no remote configured"; return 1; }
-
-  print "[*] Fetching from $remote..."
-  git fetch --all --prune --tags || return 1
-
-  # Materialize remote-only branches as local tracking branches
-  for branch in ${(f)"$(git for-each-ref --format='%(refname:strip=3)' "refs/remotes/$remote")"}; do
-    [[ -z "$branch" || "$branch" == HEAD ]] && continue
-    git show-ref --verify --quiet "refs/heads/$branch" && continue
-    git branch --track "$branch" "$remote/$branch" >/dev/null 2>&1 &&
-      print "[+] created $branch"
-  done
-
-  # Fast-forward every local branch (current one included) to its upstream
-  current=$(git symbolic-ref --quiet --short HEAD)
-  for branch in ${(f)"$(git for-each-ref --format='%(refname:short)' refs/heads)"}; do
-    [[ -z "$branch" ]] && continue
-    if [[ "$branch" == "$current" ]]; then
-      if git pull --ff-only >/dev/null 2>&1; then
-        print "[=] $branch synced"
-      else
-        print "[!] $branch could not fast-forward (diverged or dirty tree)"
-      fi
-    elif git fetch "$remote" "$branch:$branch" >/dev/null 2>&1; then
-      print "[=] $branch synced"
-    else
-      print "[-] $branch skipped (no upstream or diverged)"
-    fi
-  done
-
-  print "[*] Done. Local branches:"
-  git branch --list
-}
 
 # =============================================================================
 # zsh plugins
